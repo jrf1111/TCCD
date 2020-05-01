@@ -1,0 +1,35 @@
+String SD (A11).
+COMPUTE SD=ACAD_START_DATE.
+VARIABLE LABELS SD 'SD'.
+EXECUTE.
+
+String SD2 (A3).
+COMPUTE SD2=CHAR.SUBSTR(SD,4,3).
+VARIABLE LABELS SD2 'sd2'.
+EXECUTE.
+
+
+RECODE SD2 (CONVERT) ('JAN'=1) ('AUG'=8) ('MAY'=5) INTO Orig_start_month.
+VARIABLE LABELS Orig_start_month 'Original start month'.
+EXECUTE.
+
+
+COMPUTE ORIG_START_YEAR=NUMBER((CHAR.SUBSTR(SD,8,4)),F4).
+VARIABLE LABELS  ORIG_START_YEAR 'Original Start Year'.
+EXECUTE.
+
+
+IF  (CHAR.SUBSTR(ACAD_TERM,5,2) ='SP') Degree_month=5.
+if  (CHAR.SUBSTR(ACAD_TERM,5,2) ='SU') Degree_month=8.
+if (CHAR.SUBSTR(ACAD_TERM,5,2) ='FL') Degree_month=12.
+EXECUTE.
+VARIABLE LABELS  Degree_month 'Degree_month'.
+
+Compute Degree_year = NUMBER((CHAR.SUBSTR(ACAD_TERM,1,4)),F4).
+VARIABLE LABELS Degree_year 'Degree year'.
+Execute.
+
+
+COMPUTE ORIG_START_YEAR=NUMBER((CHAR.SUBSTR(SD,8,4)),F4).
+VARIABLE LABELS  ORIG_START_YEAR 'Original Start Year'.
+EXECUTE.
