@@ -35,7 +35,9 @@ tccd_cols = function(...){
 #Changes or new color palettes are added in this list
 tccd_palettes = list(
 	`main`  = tccd_cols("blue", "green", "turquoise", "gray"),
-	`no_grey`  = tccd_cols("blue", "green", "turquoise")
+	`middle_gray`  = tccd_cols("blue", "green", "gray", "turquoise"),
+	`middle_gray2`  = tccd_cols("blue", "gray", "green", "turquoise"),
+	`no_gray`  = tccd_cols("blue", "green", "turquoise")
 )
 
 
