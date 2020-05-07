@@ -1,0 +1,31 @@
+---
+title: "#### Analysis"
+author: "Someone"
+date: "`r Sys.time()`"
+output:
+  html_document:
+    fig_height: 3
+    fig_width: 5
+    code_folding: hide
+---
+#### `r getwd()`
+
+
+# Request Details 
+
+# Request Information  
+
+
+
+
+# Setup
+```{r}
+options(kableExtra.auto_format = FALSE) #for proper table formating in Word
+knitr::opts_chunk$set(echo = TRUE,
+											results = "asis")
+
+library(tidyverse)
+library(data.table)
+
+
+```
