@@ -49,12 +49,14 @@ term_num_to_acad_year = function(Term_num){
 #' @description Based on `AcademicYear.sps`
 #'
 #' @return A character vector of the academic year that the terms belong to (e.g., ""2019-2020).
-#' @export
+#' @import plyr
 #'
 #' @examples
 #' term_ID_to_acad_year("2019SU")   # "2018-2019"
 term_ID_to_acad_year = function(Term_Id){
 
+
+	term = data.frame(Term_Id = Term_Id)
 
 	ref_tab = data.frame(  year = rep(2002:2050, each=7),
 												 Term_Id = paste0(rep(2002:2050, each=7),
@@ -86,9 +88,7 @@ term_ID_to_acad_year = function(Term_Id){
 
 	ref_tab$acad_year = paste0(ref_tab$ay_start, "-", ref_tab$ay_end)
 
-	res = base::merge(Term_Id, ref_tab[, c("Term_Id", "acad_year")],
-							by.x="x", by.y = "Term_Id"
-							)
+	res = plyr::join(term, ref_tab[, c("Term_Id", "acad_year")], by="Term_Id")
 
 	res$acad_year
 
