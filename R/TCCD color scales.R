@@ -17,7 +17,7 @@ tccd_colors=c(blue = "#244061",
 #' Function to extract TCCD colors as hex codes
 #'
 #' @param ... Character names of tccd_colors
-#'
+#' @export
 tccd_cols = function(...){
 	cols = tolower(c(...))
 
@@ -49,7 +49,7 @@ tccd_palettes = list(
 #' @param palette Character name of palette in tccd_palettes
 #' @param reverse Boolean indicating whether the palette should be reversed
 #' @param ... Additional arguments passed to colorRampPalette()
-#'
+#' @export
 tccd_pal = function(palette = "main", reverse = FALSE, ...) {
 	pal = tccd_palettes[[palette]]
 
@@ -67,7 +67,7 @@ tccd_pal = function(palette = "main", reverse = FALSE, ...) {
 #' @param reverse Boolean indicating if the palette should be reversed
 #' @param ... Additional arguments passed to discrete_scale() or
 #'            scale_color_gradientn(), used respectively when discrete is TRUE or FALSE
-#'
+#' @export
 scale_color_tccd = function(palette = "main", discrete = TRUE, reverse = FALSE, ...) {
 	pal = tccd_pal(palette = palette, reverse = reverse)
 
@@ -85,7 +85,7 @@ scale_color_tccd = function(palette = "main", discrete = TRUE, reverse = FALSE, 
 #' @param reverse Boolean indicating whether the palette should be reversed
 #' @param ... Additional arguments passed to discrete_scale() or
 #'            scale_fill_gradientn(), used respectively when discrete is TRUE or FALSE
-#'
+#' @export
 scale_fill_tccd = function(palette = "main", discrete = TRUE, reverse = FALSE, ...) {
 	pal = tccd_pal(palette = palette, reverse = reverse)
 

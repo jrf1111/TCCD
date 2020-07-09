@@ -10,6 +10,7 @@
 #' @description Calculates the new race/ethnicity definition (07-19-2017).  Based on `New Ethnicity Recodes for ST Students Enrollment Files 10-25-2018.sps`.
 #'
 #' @return a character vector.
+#' @export
 ethnic_recode = function(Races, Ethnics){
 
 	dplyr::case_when(
@@ -56,7 +57,7 @@ ethnic_recode = function(Races, Ethnics){
 #' new_ethnic_group("Black / African American") #"2. Black / African American"
 #' new_ethnic_group("Hispanic Latino") #"3. Hispanic Latino"
 #' new_ethnic_group("Asian") #"4. Other"   everything else
-#'
+#' @export
 new_ethnic_group = function(newEthnicity){
 
 	dplyr::case_when(
@@ -80,7 +81,7 @@ new_ethnic_group = function(newEthnicity){
 #' @param Ethnics
 #'
 #' @description Calculates the new race/ethnicity definition (07-19-2017).  Based on `New Ethnicity Recodes for ST Students Enrollment Files 10-25-2018.sps`.
-#'
+#' @export
 newEthnicity3 = function(Races, Ethnics){
 
 	dplyr::case_when(

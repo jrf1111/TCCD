@@ -8,7 +8,7 @@
 #' @return A character vector of the relevant academic year (e.g., "2018-2019").
 #' @import dplyr
 #'
-#'
+#' @export
 term_num_to_acad_year = function(Term_num){
 
 	res = dplyr::case_when(
@@ -53,6 +53,8 @@ term_num_to_acad_year = function(Term_num){
 #'
 #' @examples
 #' term_ID_to_acad_year("2019SU")   # "2018-2019"
+#'
+#' @export
 term_ID_to_acad_year = function(Term_Id){
 
 
