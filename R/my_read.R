@@ -30,11 +30,12 @@ my_read = function(path, clean_names = TRUE, blanks_to_na = TRUE, ...){
 	}
 
 	if(blanks_to_na){
-		res = sapply(res, function(x){
+		res = lapply(res, function(x){
+			if(is.character(x)){
 			x = trimws(x)
 			x[x == ""] = NA
 			x[x == " "] = NA
-			x
+			x} else{x}
 		}
 		)
 
