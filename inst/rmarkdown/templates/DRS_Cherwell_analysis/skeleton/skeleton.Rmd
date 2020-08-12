@@ -1,0 +1,460 @@
+---
+title: 'DRS `r gsub(".*?\\/(.*?)$", "\\1", getwd())`'
+author: "Analyst: Jake Roden-Foreman"
+date: "Analysis performed at `r Sys.time()`"
+runtime: shiny
+output:
+  html_document:
+    pandoc_args: "--dpi=150"
+    fig_height: 3
+    fig_width: 5
+    code_folding: show
+    df_print: kable
+    toc: true
+    toc_depth: 3
+    toc_float: true
+knit: (function(inputFile, encoding) { 
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_file=file.path(dirname(inputFile), 
+                        "Write ups and reports",
+                        "Analysis.html" )) })
+---
+
+#### Files at: `r getwd()`
+\
+\
+
+
+# Request Details
+```{r request info, echo=FALSE, results='asis'}
+unlink('Analysis_cache', recursive = TRUE) #remove any cached files
+
+
+#set rending settings
+knitr::opts_chunk$set(echo = TRUE,
+											results = "asis",
+											tidy = "styler",
+											comment = "")
+
+
+
+#find saved email with request info
+filename = list.files("Info and notes", 
+											pattern = "been assigned ownership of Service Request.*?eml",
+											full.names = T)
+
+
+team_assign = grepl("Your team", filename)
+
+
+#import it
+request_info = readLines(filename)
+
+#pull out the date the request was sent, convert to a proper date format, and save for later
+
+if(team_assign){
+	submitted = request_info[grepl("^(Sent:)", request_info)]
+	submitted = gsub("(Sent:\\s{1,}\\w{1,},) (\\w{1,} \\d{1,}, 20\\d{2})(.*?)$", 
+									 "\\2", submitted)
+	submitted = as.Date(submitted, "%b %d, %Y")
+} else{
+	submitted = request_info[grepl("^(Date:)", request_info)]
+	submitted = gsub("(Date:\\s{1,}\\w{1,},) (.*?20\\d{2})(.*?)$", 
+									 "\\2", submitted)
+	submitted = as.Date(submitted, "%d %b %Y")
+	}
+
+
+
+
+if(team_assign){
+	#select the relevant portions
+	start = which(grepl("^(New Service Request)", request_info))
+	end = which(grepl("^(Service Request)", request_info))[1]-1
+	request_info = request_info[start:end]
+	
+	
+	#remove blank lines
+	request_info = request_info[request_info!=""]
+	
+	#remove the "Classification" line
+	request_info = request_info[!grepl("^(Classification)", request_info)]
+	
+	
+	#convert "New Service Request #####" to "New Service Request: #####"
+	request_info = gsub("^(New Service Request) (\\d{1,})", "\\1: \\2", request_info)
+	
+	
+	
+	
+	#collapse the description into a single cell but keep line breaks
+	desc_start = which(grepl("^(Description:)", request_info))
+	desc_end = length(request_info)
+	desc = request_info[desc_start:desc_end]
+	desc = paste(desc, collapse = "<br>")
+	request_info[desc_start] = desc
+	request_info = request_info[1:desc_start]
+	
+	
+	
+	
+	
+	#split the file to have two columns
+	request_info = stringr::str_split_fixed(request_info, ":", n=2)
+	request_info = as.data.frame(request_info)
+	
+	#trim whitespaces
+	request_info$V1 = trimws(request_info$V1)
+	request_info$V2 = trimws(request_info$V2)
+	
+	#remove html after email adsress
+	request_info$V2 = gsub("<mailto:.*?>", "", request_info$V2)
+	
+	#convert the element label "New Service Request" to "Service Request ID"
+	request_info$V1 = gsub("New Service Request", "Service Request ID", request_info$V1)
+	
+	
+	#insert the date the request was submitted into the second row
+	request_info = rbind(request_info[1, ],
+											 c("Date Submitted", as.character(submitted)),
+											 request_info[-1, ]
+	)
+	
+}
+
+
+
+
+
+
+if(team_assign == FALSE){
+	#select the relevant portions
+	start = which(grepl("^(In Progress Service Request)", request_info))
+	end = which(grepl("(Resolution deadline)", request_info))[1]-1
+	request_info = request_info[start:end]
+	
+	
+	#remove blank lines
+	request_info = request_info[request_info!=""]
+	
+	#remove the "Classification" line
+	request_info = request_info[!grepl("^(Classification)", request_info)]
+	
+	
+	#convert "In Progress Service Request #####" to "In Progress Service Request: #####"
+	request_info = gsub("^(In Progress Service Request) (\\d{1,})", "\\1: \\2", request_info)
+	
+	
+	
+	
+	#collapse the description into a single cell but keep line breaks
+	desc_start = which(grepl("^(Description:)", request_info))
+	desc_end = length(request_info)
+	desc = request_info[desc_start:desc_end]
+	desc = paste(desc, collapse = "<br>")
+	request_info[desc_start] = desc
+	request_info = request_info[1:desc_start]
+	
+	
+	
+	
+	
+	#split the file to have two columns
+	request_info = stringr::str_split_fixed(request_info, ":", n=2)
+	request_info = as.data.frame(request_info)
+	
+	#trim whitespaces
+	request_info$V1 = trimws(request_info$V1)
+	request_info$V2 = trimws(request_info$V2)
+	
+	#remove html after email adsress
+	request_info$V2 = gsub("<mailto:.*?>", "", request_info$V2)
+	
+	#convert the element label "In Progress Service Request" to "Service Request ID"
+	request_info$V1 = gsub("In Progress Service Request", "Service Request ID", request_info$V1)
+	
+	
+	#insert the date the request was submitted into the second row
+	request_info = rbind(request_info[1, ],
+											 c("Date Submitted", as.character(submitted)),
+											 request_info[-1, ]
+	)
+	
+}
+
+
+
+
+
+#print
+DT::datatable(request_info, 
+							escape=FALSE,
+							rownames = F, 
+							colnames = c("", ""),
+							options = list(dom = 't',
+														 scrollX = TRUE))
+
+
+
+
+```
+
+
+
+
+```{r update date and DRS number in Excel template, echo=FALSE}
+
+template_path = file.path("Write ups and reports", "Excel template.xlsx")
+
+if(file.exists(template_path)){
+	library(openxlsx)
+	xl = loadWorkbook(template_path)
+	
+	#DRS #### (YYYY-MM-DD)
+	x = paste0("DRS ", request_info$V2[1],
+						 " (", format(Sys.Date(), "%Y-%m-%d"), ")"
+						 )
+	
+	x = as.data.frame(x)
+	
+	writeData(xl, sheet = "Summary",
+						x = x,
+						startCol = 9,
+						startRow = 11,
+						colNames = FALSE, 
+						rowNames = FALSE
+						)
+	
+	openxlsx::saveWorkbook(xl, template_path, overwrite = TRUE)
+	
+}
+
+```
+
+
+
+```{r rename files in Write ups and reports, echo=FALSE}
+
+files = list.files(path = "Write ups and reports",
+                   pattern = "Word|Excel template", 
+                   recursive = T, full.names = T)
+
+new_name = getwd()
+new_name = gsub(".*?_DRS[[:punct:]](.*?)$", "\\1", new_name)
+new_name = gsub("-", "_", new_name)
+new_name = gsub(" ", "", new_name)
+new_name = paste(new_name, format(Sys.Date(), "%Y-%m-%d"), "JRF", sep = "_")
+
+
+for(i in seq_along(files)){
+  
+  ext = gsub(".*?(xlsx|docx)", "\\1", files[i])
+  
+  file.rename(from = files[i], 
+              to = file.path("Write ups and reports", paste0(new_name, ".", ext)) )
+  
+}
+
+
+
+
+```
+
+
+
+
+\
+\
+\
+\
+
+# DRS Review Log Info
+
+```{r, echo=FALSE}
+
+
+#if there is a requested date, use it.  If not, use 14 days after submitting
+if(any(request_info$V1 == "Requested by Date")){
+	
+	required_date = request_info$V2[request_info$V1 == "Requested by Date"]
+	required_date = as.POSIXlt(required_date, 
+														 tryFormats = c("%Y-%m-%d %H:%M:%OS",
+														 							 "%m-%d-%Y %H:%M:%OS",
+														 							 "%Y/%m/%d %H:%M:%OS",
+														 							 "%m/%d/%Y %H:%M:%OS",
+														 							 "%Y-%m-%d %H:%M %p",
+														 							 "%m-%d-%Y %H:%M %p",
+														 							 "%Y/%m/%d %H:%M %p",
+														 							 "%m/%d/%Y %H:%M %p",
+														 							 "%Y-%m-%d %H:%M",
+														 							 "%Y/%m/%d %H:%M",
+														 							 "%Y-%m-%d",
+														 							 "%Y/%m/%d"))	
+	
+	required_date = format(required_date, "%m/%d/%y")
+	
+	
+} else{
+	
+	required_date = format(submitted+14, "%m/%d/%y")
+}
+
+
+
+
+drs_info = data.frame(
+  DRS = request_info$V2[1],
+  "Date Submitted" = format(submitted, "%m/%d/%y"),
+  "Date Required" = required_date,
+  Description = gsub("^(.*?._DRS.)(.*?-.*?-)(\\s?)(.*?)$", "\\4", getwd()),
+  "Link to File/Folder" = gsub(".*?(Research_development/.*?)", "\\1", getwd()),
+  "Approx Time Needed?" = NA, 
+  Requestor = "Jake"
+)
+
+
+
+DT::datatable(drs_info, 
+							extensions = "Buttons",
+							rownames = F, 
+							options = list(dom = 'Bt',
+														 scrollX = TRUE,
+														 buttons = list(list(extend = 'copy', title = NULL, 
+														 										header = FALSE))) )
+
+
+
+
+```
+
+
+
+\
+\
+\
+\
+\
+
+# Notes
+
+
+
+
+
+\
+\
+\
+\
+\
+
+
+
+
+# Analysis
+
+## Setup 
+```{r setup}
+rm(list = ls())  #remove all objects from the environment
+knitr::opts_chunk$set(echo = TRUE, results = "asis") #set a few rendering settings
+
+#load packages
+suppressMessages(library(tidyverse))
+suppressMessages(library(tidylog))
+suppressMessages(library(data.table))
+suppressMessages(library(DT))
+
+
+
+#source/load my custom scripts for later use
+scr <- list.files("/Volumes/Research_development/_Jacob Roden-Foreman/R resources/R/",
+					 full.names = T)
+
+for(i in seq_along(scr)){
+	source(scr[i])
+}
+
+rm(scr, i)
+
+
+```
+
+
+
+
+## Import and Clean
+```{r import and clean}
+
+
+
+```
+
+
+\
+\
+\
+\
+
+
+## Calculations
+```{r calculations}
+
+
+
+```
+
+
+\
+\
+\
+\
+\
+\
+
+
+# Results
+```{r results}
+
+res = cbind(iris, iris, iris, iris)
+
+my_print(res)
+
+
+```
+
+
+
+
+
+
+
+\
+\
+\
+\
+\
+\
+
+
+
+# 
+
+# Session Information
+<style>
+.footer {
+  position: relative;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+</style>
+
+<div class="footer">
+
+```{r session info}
+
+pander::pander(sessionInfo())
+
+```
+
+</div>
