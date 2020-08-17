@@ -303,15 +303,19 @@ if(any(request_info$V1 == "Requested by Date")){
 
 
 
+
 drs_info = data.frame(
   DRS = request_info$V2[1],
   "Date Submitted" = format(submitted, "%m/%d/%y"),
   "Date Required" = required_date,
-  Description = gsub("^(.*?._DRS.)(.*?-.*?-)(\\s?)(.*?)$", "\\4", getwd()),
+  Description = gsub("^(.*?._DRS.)(.*?-.*?-)(\\s?)([[:alpha:]]*?)(.*?)", "\\4", getwd()),
   "Link to File/Folder" = gsub(".*?(Research_development/.*?)", "\\1", getwd()),
   "Approx Time Needed?" = NA, 
   Requestor = "Jake"
 )
+
+
+
 
 
 
