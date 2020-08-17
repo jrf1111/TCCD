@@ -13,6 +13,8 @@ output:
     toc: true
     toc_depth: 3
     toc_float: true
+editor_options: 
+  chunk_output_type: console
 knit: (function(inputFile, encoding) { 
       rmarkdown::render(inputFile,
                         encoding=encoding, 
