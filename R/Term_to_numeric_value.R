@@ -1,13 +1,12 @@
-# Convert Terms to a numeric value for calculations.
-
-
+#' Convert Terms to a numeric value for calculations.
+#'
 #' @title Term_num
 #'
 #'
 #' @param TERM_ID A term character or factor code with values such as "2019FL" or "2010SU".
 #' @description Converts terms to a numeric value for calculations.  Based on `Convert STCTERM to numeric value.sps`.
 #' @export
-Term_num = function(TERM_ID){
+term_num = function(TERM_ID){
 
 
 	TERM_ID = tibble::tibble(TERM_ID = TERM_ID)
@@ -25,7 +24,7 @@ Term_num = function(TERM_ID){
 
 
 
-#' @title Term
+#' @title Term name
 #'
 #' @param TERM_ID A term character or factor code with values such as  "2019FL" or "2010SU"
 #' @description Converts semester term codes to their English equivalent.  Based on `Convert STCTERM to numeric value.sps`.
@@ -36,7 +35,7 @@ Term_num = function(TERM_ID){
 #' Term("2011SP")  #Spring
 #' Term("2011S")  #2011S - Doesn't match the pattern
 #' @export
-Term = function(TERM_ID){
+Term_name = function(TERM_ID){
 
 	res = TERM_ID
 	res = gsub(".*?SP", "Spring", res)

@@ -1,6 +1,6 @@
 
 
-#ethnicity recode
+#Recode race and ethnicity
 #
 #' @title ethnic_recode
 #'
