@@ -10,9 +10,7 @@
 #'
 #' @export
 standardize_ids = function(id, length = 7){
-	if(!is.numeric(id)){
-		message("standardize_ids needs to be fed a numeric input (or one that can be coerced to numeric) to work properly")
-	}
+
 
 	na_pre = sum(is.na(id))
 	res = as.numeric(id)
