@@ -26,6 +26,4 @@ vignettes/*.pdf
 *.knit.md
 # R Environment Variables
 .Renviron
-
-
-**/**/.DS_Store
+**/.DS_Store
