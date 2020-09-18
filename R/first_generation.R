@@ -10,9 +10,9 @@
 #'   mainly used internally for reports such as the extended campus profiles.
 #'   Use \code{method = "fed"} to use the federal definition (student is first
 #'   generation if mom \emph{and} dad have no bachelor's degree); this
-#'   definition is used for grant requests. #' @param parents Logical. Should
-#'   the re-coded values for parents' educational levels be returned? Default is
-#'   FALSE.
+#'   definition is used for grant requests.
+#' @param parents Logical. Should the re-coded values for parents' educational
+#'                levels be returned? Default is FALSE.
 #'
 #'
 #' @return if \code{parents = FALSE} (the default), a vector indicating if
