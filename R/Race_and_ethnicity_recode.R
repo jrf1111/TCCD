@@ -7,30 +7,32 @@
 #' @param Races
 #' @param Ethnics
 #'
-#' @description Calculates the new race/ethnicity definition (07-19-2017).  Based on `New Ethnicity Recodes for ST Students Enrollment Files 10-25-2018.sps`.
+#' @description Calculates the new race/ethnicity definition (07-19-2017).  Based on `New Ethnicity Recodes for ST Students Enrollment Files 10-25-2018.sps`. Updated 2020-09-15 to account for Ethnics = "No Ethnicity Listed".
 #'
 #' @return a character vector.
 #' @export
 ethnic_recode = function(Races, Ethnics){
 
+	Races[is.na(Races)] = ""
+	Ethnics[is.na(Ethnics)] = ""
+	
 	dplyr::case_when(
 		Races == "International" ~ 'International',
 		Ethnics=='Hispanic/Latino' ~ 'Hispanic Latino',
 
-		((Ethnics=='Non Hispanic/Latino' | Ethnics=='Ethnicity Unknown' | Ethnics=="") & Races=='White') ~ 'White',
+		Ethnics!='Hispanic/Latino' & Races=='White' ~ 'White',
 
-		((Ethnics=='Non Hispanic/Latino' | Ethnics=='Ethnicity Unknown'  | Ethnics=="")
-		 & Races=='Black or African American') ~ 'Black / African American',
+		Ethnics!='Hispanic/Latino' & Races=='Black or African American' ~ 'Black / African American',
 
-		((Ethnics=='Non Hispanic/Latino' | Ethnics=='Ethnicity Unknown'  | Ethnics=="") & Races=='Asian')~'Asian',
+		Ethnics!='Hispanic/Latino' & Races=='Asian' ~'Asian',
 
-		((Ethnics=='Non Hispanic/Latino' | Ethnics=='Ethnicity Unknown' | Ethnics=="")  & Races=='American/Alaska Native')~'American Indian / Alaska Native',
+		Ethnics!='Hispanic/Latino'  & Races=='American/Alaska Native' ~ 'American Indian / Alaska Native',
 
-		((Ethnics=='Non Hispanic/Latino' | Ethnics=='Ethnicity Unknown'  | Ethnics=="") & Races=='Hawaiian/Pacific Islander') ~'Native Hawaiian / Pacific Islander',
+		Ethnics!='Hispanic/Latino' & Races=='Hawaiian/Pacific Islander' ~'Native Hawaiian / Pacific Islander',
 
-		((Ethnics=='Non Hispanic/Latino' | Ethnics=='Ethnicity Unknown'  | Ethnics=="")  & Races=='Race Unknown') ~ 'Unknown / Not Reported',
+		Ethnics!='Hispanic/Latino' & Races=='Race Unknown' ~ 'Unknown / Not Reported',
 
-		((Ethnics=='Non Hispanic/Latino' | Ethnics=='Ethnicity Unknown'  | Ethnics=="")  & Races=='Multi') ~ 'Multiracial',
+		Ethnics!='Hispanic/Latino' & Races=='Multi' ~ 'Multiracial',
 
 		TRUE ~ 'Unknown / Not Reported'
 
