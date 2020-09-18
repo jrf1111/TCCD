@@ -45,11 +45,11 @@ dual_credit = function(Id, Program, term = NULL, term_num = NULL){
 
 
 	if(is.null(term_num) & !is.null(term)){
-		term_num = Term_num(term)
+		term_num = term_num(term)
 	}
 
 	if(!is.numeric(term_num) & !is.null(term)){
-		term_num = Term_num(term)
+		term_num = term_num(term)
 	}
 
 	res = data.frame(Id = Id,
@@ -57,7 +57,7 @@ dual_credit = function(Id, Program, term = NULL, term_num = NULL){
 									 term_num = term_num)
 
 	if(!is.null(term)){
-		res$term = term
+		res$Term = term
 		}
 
 
