@@ -21,10 +21,15 @@
 #'   educational level, and students' first generation status.
 #' @export
 #'
-#' @details Defintions: M-NOHS - Mother - No High School M-SMHS - Mother - Some
-#'   High School M-HSGD - Mother - HS Grad or GED M-SMCL - Mother - Some College
-#'   M-CLBD - Mother- Bachelor's Degree M-CLAD - Mother - Advanced Degree M-NRSP
-#'   - Mother - No Response
+#' @details Defintions:
+#' NOHS = No High School
+#' SMHS = Some High School
+#' HSGD = HS Grad or GED
+#' SMCL = Some College
+#' CLBD = Completed Bachelor's Degree
+#' CLAD = Completed Advanced Degree
+#' NRSP = No Response
+#'
 #'
 #' @examples
 first_generation = function(Mother_Educ_Level, Father_Educ_Level, method = "tcc", parents = FALSE){
@@ -112,7 +117,6 @@ first_generation = function(Mother_Educ_Level, Father_Educ_Level, method = "tcc"
 
 
 	}
-
 
 	if(parents==TRUE){
 		return(data.frame(mother_level, father_level, first_gen))
