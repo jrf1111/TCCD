@@ -117,7 +117,6 @@ scale_fill_tccd = function(palette = "main", discrete = TRUE, reverse = FALSE, .
 #' @seealso \link[ggplot2]{theme_bw}
 #'
 #' @importFrom ggplot2 %+replace%
-#' @importFrom ggplot2 +.gg
 #' @export
 #'
 #' @examples
