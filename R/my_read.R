@@ -38,6 +38,7 @@ my_read = function(path, clean_names = TRUE, blanks_to_na = TRUE, ...){
 	if(clean_names){
 		colnames(res) = gsub(" ", "_", colnames(res))
 		colnames(res) = gsub("/", "_", colnames(res))
+		colnames(res) = gsub("+", "_plus_", colnames(res), fixed = T)
 	}
 
 	if(blanks_to_na){
