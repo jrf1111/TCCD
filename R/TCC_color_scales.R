@@ -2,7 +2,6 @@
 
 #based on https://tccd.svbtle.com/creating-corporate-colour-palettes-for-ggplot2
 
-library(ggplot2)
 
 
 # TCCD corporate colors
@@ -150,23 +149,23 @@ theme_tcc = function(rotate_x_labs = FALSE,
 										 base_line_size = base_size/22,
 										 base_rect_size = base_size/22)
 {
-	res = theme_grey(base_size = base_size,
+	res = ggplot2::theme_grey(base_size = base_size,
 									 base_family = base_family,
 									 base_line_size = base_line_size,
 									 base_rect_size = base_rect_size) %+replace%
-		theme(panel.background = element_rect(fill = "white", colour = NA),
-					panel.border = element_rect(fill = NA, colour = "grey20"),
-					panel.grid = element_line(colour = "grey92"),
-					panel.grid.minor = element_line(size = rel(0.5)),
-					strip.background = element_rect(fill = "grey85", colour = "grey20"),
-					legend.key = element_rect(fill = "white", colour = NA),
+		ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white", colour = NA),
+					panel.border = ggplot2::element_rect(fill = NA, colour = "grey20"),
+					panel.grid = ggplot2::element_line(colour = "grey92"),
+					panel.grid.minor = ggplot2::element_line(size = rel(0.5)),
+					strip.background = ggplot2::element_rect(fill = "grey85", colour = "grey20"),
+					legend.key = ggplot2::element_rect(fill = "white", colour = NA),
 					plot.caption.position = "plot",
 					complete = TRUE) +
-		theme(plot.caption = element_text(margin = margin(t=base_size)))
+		ggplot2::theme(plot.caption = ggplot2::element_text(margin = ggplot2::margin(t=base_size)))
 
 	if(rotate_x_labs){
 		res = res %+replace%
-			theme(axis.text.x = element_text(angle = -90, vjust = 0.5, hjust = 0))
+			ggplot2::theme(axis.text.x = ggplot2::element_text(angle = -90, vjust = 0.5, hjust = 0))
 	}
 
 	res

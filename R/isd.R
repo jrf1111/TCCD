@@ -1,7 +1,16 @@
 
+#' ISD
+#'
+#' @param High_School Character. A the high schools to get ISDs for.
+#'
+#' @return a \code{data.frame} with the variables \code{ISD}, \code{Include_ISD}, \code{Include_ALL}, \code{Service_Area}, and \code{Service_Area_with_Private_Charter}
+
+#' @export
+#'
+#' @examples
 isd = function(High_School){
-	
-	
+
+
 	ISD = dplyr::case_when(
 		High_School == "ARLINGTON HIGH SCHOOL" ~ "Arlington ISD",
 		High_School == "ARLINGTON COLLEGIATE HS" ~ "Arlington ISD",
@@ -34,9 +43,9 @@ isd = function(High_School){
 		High_School == "FELLOWSHIP CHRISTIAN ACADEMY" ~ "zUnknown ISD",
 		High_School == "OUT STATE HIGH SCHOOL" ~ "zUnknown ISD",
 		High_School == "HALTOM HIGH SCHOOL" ~ "Birdville ISD",
-		
-		
-		
+
+
+
 		High_School == "BIRDVILLE HIGH SCHOOL" ~  "Birdville ISD",
 		High_School == "CARROLL SENIOR HIGH SCHOOL" ~ "Carroll ISD",
 		High_School == "GRAPEVINE-COLLEYVILLE COLLEGIATE ACADEMY" ~ "Grapevine Colleyville ISD",
@@ -55,14 +64,14 @@ isd = function(High_School){
 		High_School == "ROBERT L PASCHAL HIGH SCHOOL" ~ "Fort Worth ISD",
 		High_School == "TRIMBLE TECHNICAL HIGH SCHOOL" ~ "Fort Worth ISD",
 		High_School == "TRINITY HIGH SCHOOL" ~ "Hurst Euless Bedford ISD",
-		
+
 		High_School == "O D WYATT SENIOR HIGH SCHOOL" ~ "Fort Worth ISD",
 		High_School == "SOUTH HILLS HIGH SCHOOL" ~ "Fort Worth ISD",
 		High_School == "SOUTHWEST HIGH SCHOOL" ~ "Fort Worth ISD",
-		
+
 		High_School == "TEXAS HOME SCHOOL HS" ~ "zUnknown ISD",
 		High_School == "TEXAS VIRTUAL ACADEMY" ~ "zUnknown ISD",
-		
+
 		High_School == "ALTERNATIVE EDUCATION CENTER" ~ "zUnknown ISD",
 		High_School == "ARLINGTON HEIGHTS CHRISTIAN ACADEM" ~ "zUnknown ISD",
 		High_School == "BOWIE HIGH SCHOOL" ~ "zUnknown ISD",
@@ -336,12 +345,12 @@ isd = function(High_School){
 		High_School == "JAMES EARL RUDDER HS" ~ "Bryan ISD",
 		TRUE ~ "zUnknown ISD"
 	)
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	Include_ISD = dplyr::case_when(
 		ISD == 'Fort Worth ISD' ~ 1,
 		ISD == 'Mansfield ISD'  ~ 1,
@@ -362,17 +371,17 @@ isd = function(High_School){
 		ISD == 'Cleburne ISD'  ~ 1,
 		TRUE ~ 0
 	)
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
 	Include_ALL = dplyr::case_when(
-		
+
 		ISD == 'Fort Worth ISD' ~1,
 		ISD == 'Mansfield ISD' ~1,
 		ISD == 'Arlington ISD' ~1,
@@ -400,12 +409,12 @@ isd = function(High_School){
 		High_School == 'CASSATA HIGH SCHOOL' ~1,
 		TRUE ~ 0
 	)
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	Service_Area = dplyr::case_when(
 		ISD == 'Birdville ISD'  ~ 'NE',
 		ISD == 'Carroll ISD'  ~ 'NE',
@@ -441,14 +450,14 @@ isd = function(High_School){
 		ISD == 'Fort Worth ISD' &  High_School == 'WESTERN HILLS HIGH SCHOOL'  ~ 'TR',
 		ISD == 'Fort Worth ISD' &  High_School == 'YOUNG WOMENS LEADERSHIP ACADEMY'  ~ 'TR',
 		TRUE ~ NA_character_
-		
+
 	)
-	
-	
-	
-	
+
+
+
+
 	Service_Area_with_Private_Charter = dplyr::case_when(
-		
+
 		ISD == 'Birdville ISD' ~ 'NE',
 		ISD == 'Carroll ISD' ~ 'NE',
 		ISD == 'Grapevine Colleyville ISD' ~ 'NE',
@@ -492,23 +501,23 @@ isd = function(High_School){
 		High_School == 'CASSATA HIGH SCHOOL' ~ 'TR',
 		TRUE ~ NA_character_
 	)
-	
-	
-	
-	res = data.frame(ISD = ISD, 
+
+
+
+	res = data.frame(ISD = ISD,
 									 Include_ISD = Include_ISD,
 									 Include_ALL = Include_ALL,
 									 Service_Area = Service_Area,
 									 Service_Area_with_Private_Charter = Service_Area_with_Private_Charter
 	)
-	
-	
-	
+
+
+
 	return(res)
-	
-	
-	
-	
+
+
+
+
 }
 
 
