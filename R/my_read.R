@@ -5,12 +5,13 @@
 #' @param blanks_to_na Logical. Should blank/empty character strings be converted to NAs? Default is TRUE.
 #' @param ... Other arguments passed to other methods
 #'
+#'
 #' @return a \code{data.frame}
 #'
 #' @export
 my_read = function(path, clean_names = TRUE, blanks_to_na = TRUE, ...){
 
-	ext = gsub("(.*?)(\\..*?)$", "\\2", path)
+	ext = tail(unlist(strsplit(path, ".", fixed = T)), n=1)
 
 	if(ext == ".csv"){
 		res = data.table::fread(path)
