@@ -6,9 +6,8 @@
 #' @return Returns a character vector indicating if student is a veteran, dependent, or not-military connected
 #' @export
 #'
-#' @examples
 vet_status = function(Military_Statuses, Smv_Vetben_Elig_Code){
-	
+
 	Vet_Status = dplyr::case_when(
 		Military_Statuses == 'A' ~ 'Veteran',
 		Military_Statuses == 'G' ~ 'Veteran',
@@ -22,9 +21,9 @@ vet_status = function(Military_Statuses, Smv_Vetben_Elig_Code){
 		Smv_Vetben_Elig_Code == 'D' ~ 'Dependent',
 		TRUE ~ 'Not a Veteran'
 	)
-	
+
 	Vet_Status
-	
-	
+
+
 }
 

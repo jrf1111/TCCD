@@ -7,7 +7,6 @@
 
 #' @export
 #'
-#' @examples
 isd = function(High_School){
 
 

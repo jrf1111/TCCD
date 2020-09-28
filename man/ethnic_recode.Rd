@@ -7,7 +7,9 @@
 ethnic_recode(Races, Ethnics)
 }
 \arguments{
-\item{Ethnics}{}
+\item{Races}{The 'Races' variable.}
+
+\item{Ethnics}{The 'Ethnics' variable.}
 }
 \value{
 a character vector.

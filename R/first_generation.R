@@ -31,7 +31,6 @@
 #' NRSP = No Response
 #'
 #'
-#' @examples
 first_generation = function(Mother_Educ_Level, Father_Educ_Level, method = "tcc", parents = FALSE){
 
 	if(method == "tcc"){

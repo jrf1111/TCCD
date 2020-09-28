@@ -4,8 +4,8 @@
 #
 #' @title ethnic_recode
 #'
-#' @param Races
-#' @param Ethnics
+#' @param Races The 'Races' variable.
+#' @param Ethnics The 'Ethnics' variable.
 #'
 #' @description Calculates the new race/ethnicity definition (07-19-2017).  Based on `New Ethnicity Recodes for ST Students Enrollment Files 10-25-2018.sps`. Updated 2020-09-15 to account for Ethnics = "No Ethnicity Listed".
 #'
@@ -15,7 +15,7 @@ ethnic_recode = function(Races, Ethnics){
 
 	Races[is.na(Races)] = ""
 	Ethnics[is.na(Ethnics)] = ""
-	
+
 	dplyr::case_when(
 		Races == "International" ~ 'International',
 		Ethnics=='Hispanic/Latino' ~ 'Hispanic Latino',
@@ -79,8 +79,8 @@ new_ethnic_group = function(newEthnicity){
 
 #' newEthnicity3
 #'
-#' @param Races
-#' @param Ethnics
+#' @param Races The 'Races' variable.
+#' @param Ethnics The 'Ethnics' variable.
 #'
 #' @description Calculates the new race/ethnicity definition (07-19-2017).  Based on `New Ethnicity Recodes for ST Students Enrollment Files 10-25-2018.sps`.
 #' @export

@@ -6,7 +6,6 @@
 #' @param Term_num the numeric code for the term, such as calculated by `Term_num()`
 #'
 #' @return A character vector of the relevant academic year (e.g., "2018-2019").
-#' @import dplyr
 #'
 #' @export
 term_num_to_acad_year = function(Term_num){
@@ -51,7 +50,6 @@ term_num_to_acad_year = function(Term_num){
 #' @description Based on `AcademicYear.sps`
 #'
 #' @return A character vector of the academic year that the terms belong to (e.g., ""2019-2020).
-#' @import plyr
 #'
 #' @examples
 #' term_ID_to_acad_year("2019SU")   # "2018-2019"

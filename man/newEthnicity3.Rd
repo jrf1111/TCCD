@@ -7,7 +7,9 @@
 newEthnicity3(Races, Ethnics)
 }
 \arguments{
-\item{Ethnics}{}
+\item{Races}{The 'Races' variable.}
+
+\item{Ethnics}{The 'Ethnics' variable.}
 }
 \description{
 Calculates the new race/ethnicity definition (07-19-2017).  Based on \verb{New Ethnicity Recodes for ST Students Enrollment Files 10-25-2018.sps}.
