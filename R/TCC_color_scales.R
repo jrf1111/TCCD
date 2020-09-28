@@ -106,6 +106,44 @@ scale_fill_tccd = function(palette = "main", discrete = TRUE, reverse = FALSE, .
 
 
 
+#' TCC Theme For GGPlot2
+#' @description A TCC theme for ggplot2.  Based on \link[ggplot2]{theme_bw}
+#'
+#' @param rotate_x_labs Logical. Should the labels for the x axis be rotated 90 degrees? Default is FALSE.
+#' @param base_size Numeric. Base font size. Default is 11.
+#' @param base_family Character. Base font family.
+#' @param base_line_size Numeric. Base size for line elements.
+#' @param base_rect_size Numeric. Base size for rect elements.
+#'
+#' @seealso \link[ggplot2]{theme_bw}
+#'
+#' @export
+#'
+#' @examples
+#'
+#' p <- ggplot(mpg) +
+#' 	geom_bar(aes(y = manufacturer, fill = drv)) +
+#' 	scale_fill_tccd("blue_green") +
+#' 	#No space below the bars but 10% above them
+#' 	scale_x_continuous(expand = expansion(mult = c(0, 0.1))) +
+#' 	coord_flip() +
+#' 	labs(
+#' 		title  = "This is  a chart",
+#' 		subtitle = "It shows you some data",
+#' 		caption = "This is a caption. Some important notes could go here."
+#' 	)
+#'
+#' p
+#'
+#' p + theme_bw()
+#'
+#' #based on theme_bw() but aligns the caption with the plot instead of the figure
+#' # and it adds some extra space between the x axis title and the caption
+#' p + theme_tcc()
+#'
+#' #easily rotate and align x axis labels
+#' p + theme_tcc(rotate_x_labs = T)
+#
 theme_tcc = function(rotate_x_labs = FALSE,
 										 base_size = 11,
 										 base_family = "",
@@ -123,13 +161,22 @@ theme_tcc = function(rotate_x_labs = FALSE,
 					strip.background = element_rect(fill = "grey85", colour = "grey20"),
 					legend.key = element_rect(fill = "white", colour = NA),
 					plot.caption.position = "plot",
-					complete = TRUE)
+					complete = TRUE) +
+		theme(plot.caption = element_text(margin = margin(t=base_size)))
 
 	if(rotate_x_labs){
 		res = res %+replace%
 			theme(axis.text.x = element_text(angle = -90, vjust = 0.5, hjust = 0))
 	}
 
+	res
 
 }
+
+
+
+
+
+
+
 
