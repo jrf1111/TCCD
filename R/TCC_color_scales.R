@@ -37,7 +37,13 @@ tccd_palettes = list(
 	`main`  = tccd_cols("blue", "green", "turquoise", "gray"),
 	`middle_gray`  = tccd_cols("blue", "green", "gray", "turquoise"),
 	`middle_gray2`  = tccd_cols("blue", "gray", "green", "turquoise"),
-	`no_gray`  = tccd_cols("blue", "green", "turquoise")
+	`no_gray`  = tccd_cols("blue", "green", "turquoise"),
+	`blue_green`  = tccd_cols("blue", "green"),
+	`blue_t`  = tccd_cols("blue", "turquoise"),
+	`blue_gray`  = tccd_cols("blue", "gray"),
+	`green_t`  = tccd_cols("green", "turquoise"),
+	`green_gray`  = tccd_cols("green", "gray"),
+	`t_gray`  = tccd_cols("turquoise", "gray")
 )
 
 
