@@ -66,10 +66,10 @@ res$dual_credit = dplyr::case_when(
 
 	# the term number for 2015FL is 36
 	res$term_num <= 36 &
-		( stringr::str_detect(res$Program, "EHSE") |
-				stringr::str_detect(res$Program, "EHDC") ) ~ TRUE,
+		( grepl("EHSE", res$Program) |
+				grepl("EHDC", res$Program) ) ~ TRUE,
 
-	res$term_num > 36 & (stringr::str_detect(res$Program, "EHSE")) ~ TRUE,
+	res$term_num > 36 & (grepl("EHSE", res$Program)) ~ TRUE,
 
 	TRUE ~ FALSE
 
@@ -81,7 +81,7 @@ res$dual_credit = dplyr::case_when(
 
 res = res %>%
 	group_by(Id, term_num) %>%
-	mutate(has_ECHS = any(stringr::str_detect(Program, "ECHS"))) %>%
+	mutate(has_ECHS = any(grepl("ECHS", Program))) %>%
 	ungroup()
 
 res$dual_credit[res$has_ECHS] = FALSE
