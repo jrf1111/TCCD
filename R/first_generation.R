@@ -12,7 +12,7 @@
 #'   generation if mom \emph{and} dad have no bachelor's degree); this
 #'   definition is used for grant requests.
 #' @param parents Logical. Should the re-coded values for parents' educational
-#'                levels be returned? Default is FALSE.
+#'   levels be returned? Default is FALSE.
 #'
 #'
 #' @return if \code{parents = FALSE} (the default), a vector indicating if
