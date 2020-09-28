@@ -13,13 +13,13 @@ my_read = function(path, clean_names = TRUE, blanks_to_na = TRUE, ...){
 
 	ext = tail(unlist(strsplit(path, ".", fixed = T)), n=1)
 
-	if(ext == ".csv"){
-		res = data.table::fread(path)
+	if(ext == "csv"){
+		res = data.table::fread(path, ...)
 		class(res) = "data.frame"
-	} else if(ext == ".xlsx"){
-		res = readxl::read_xlsx(path, guess_max = 10000)
-	} else if(ext == ".xls"){
-		res = readxl::read_xls(path, guess_max = 10000)
+	} else if(ext == "xlsx"){
+		res = readxl::read_xlsx(path, guess_max = 10000, ...)
+	} else if(ext == "xls"){
+		res = readxl::read_xls(path, guess_max = 10000, ...)
 	} else {
 		warning("Cannot import the file '", path, "'. Extention '", ext, "' not supported.")
 		stop()
