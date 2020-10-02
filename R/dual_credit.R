@@ -10,23 +10,23 @@
 #'
 #'
 #' @details The method to determine if a program is dual-credit is explained in this table:
-# \tabular{lll}{
-#		Term              \tab Program Code(s)   \tab Dual-credit?\cr
-# 	2015FL and before \tab EHDC & EHSE       \tab Yes\cr
-# 	2015FL and before \tab EHSE              \tab Yes\cr
-# 	2015FL and before \tab EHDC              \tab Yes\cr
-# 	2015FL and before \tab *ECHS* & EHDC     \tab No \cr
-# 	2015FL and before \tab *ECHS* & EHSE     \tab No \cr
-# 	2015FL and before \tab *ECHS*            \tab No \cr
-# 	2015FL and before \tab None of the above \tab No \cr
-# 	After 2015FL      \tab EHSE              \tab Yes\cr
-# 	After 2015FL      \tab EHDC & EHSE       \tab Yes\cr
-# 	After 2015FL      \tab *ECHS* & EHSE     \tab No \cr
-# 	After 2015FL      \tab *ECHS*            \tab No \cr
-# 	After 2015FL      \tab *ECHS* & EHDC     \tab No \cr
-# 	After 2015FL      \tab EHDC              \tab No \cr
-# 	After 2015FL      \tab None of the above \tab No
-# }
+#' \tabular{lll}{
+#'		Term              \tab Program Code(s)   \tab Dual-credit?\cr
+#' 	2015FL and before \tab EHDC & EHSE       \tab Yes\cr
+#' 	2015FL and before \tab EHSE              \tab Yes\cr
+#' 	2015FL and before \tab EHDC              \tab Yes\cr
+#' 	2015FL and before \tab *ECHS* & EHDC     \tab No \cr
+#' 	2015FL and before \tab *ECHS* & EHSE     \tab No \cr
+#' 	2015FL and before \tab *ECHS*            \tab No \cr
+#' 	2015FL and before \tab None of the above \tab No \cr
+#' 	After 2015FL      \tab EHSE              \tab Yes\cr
+#' 	After 2015FL      \tab EHDC & EHSE       \tab Yes\cr
+#' 	After 2015FL      \tab *ECHS* & EHSE     \tab No \cr
+#' 	After 2015FL      \tab *ECHS*            \tab No \cr
+#' 	After 2015FL      \tab *ECHS* & EHDC     \tab No \cr
+#' 	After 2015FL      \tab EHDC              \tab No \cr
+#' 	After 2015FL      \tab None of the above \tab No
+#' }
 #'
 #' @export
 dual_credit = function(Id, Program, term = NULL, term_num = NULL){
