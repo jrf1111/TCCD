@@ -7,16 +7,16 @@
 #' @param table vector or NULL: the values to be matched against. Long vectors
 #'   are not supported.
 #'
-#' @details Similar to the function \code{%in%} from base but returns true if
-#'   there is no match. The functions \code{%nin%} and \code{%NIN%} are
+#' @details Similar to the function \code{%in%} from \code{base} but returns true if
+#'   there is \strong{no} match. The functions \code{%nin%} and \code{%NIN%} are
 #'   identical; the later is supplied so I don't have to lift my finger off
-#'   the shift key.
-#' @seealso \link[base]{match}
+#'   the shift key. Uses \link[fastmatch]{fmatch} from \code{fastmatch} for speed.
+#' @seealso \link[base]{match} from \code{base} and \link[fastmatch]{fmatch} from \code{fastmatch}
 #' @export
-"%nin%" <- function(x, table){match(x, table, nomatch = 0) == 0}
+"%nin%" <- function(x, table){fastmatch::fmatch(x, table, nomatch = 0) == 0}
 
 #' @rdname nin
-"%NIN%" <- function(x, table){match(x, table, nomatch = 0) == 0}
+"%NIN%" <- function(x, table){fastmatch::fmatch(x, table, nomatch = 0) == 0}
 
 
 
@@ -29,11 +29,11 @@
 #' @param table vector or NULL: the values to be matched against. Long vectors
 #'   are not supported.
 #'
-#' @details This is the exact same as the function \code{%in%} from base
+#' @details This is the exact same as \code{%fin%} from \code{fastmatch},
 #'   but this way I don't have to lift my finger off the shift key.
-#' @seealso \link[base]{match}
+#' @seealso  \link[fastmatch]{fmatch} from \code{fastmatch}
 #' @export
-"%IN%" <- function(x, table){match(x, table, nomatch = 0) > 0}
+"%IN%" <- function(x, table){fastmatch::fmatch(x, table, nomatch = 0) > 0}
 
 
 
@@ -65,7 +65,7 @@
 "%like%" <- function(x, y){
 	if(!is.character(x)){x = as.character(x)}
 	if(!is.character(y)){y = as.character(y)}
-	grepl(y, x, ignore.case = T)
+	grepl(y, x, ignore.case = T, fixed = T)
 	}
 
 
@@ -73,7 +73,7 @@
 "%LIKE%" <- function(x, y){
 	if(!is.character(x)){x = as.character(x)}
 	if(!is.character(y)){y = as.character(y)}
-	grepl(y, x, ignore.case = T)
+	grepl(y, x, ignore.case = T, fixed = T)
 }
 
 

@@ -9,14 +9,14 @@
 #'
 #' @description Calculates the new race/ethnicity definition (07-19-2017).  Based on `New Ethnicity Recodes for ST Students Enrollment Files 10-25-2018.sps`. Updated 2020-09-15 to account for Ethnics = "No Ethnicity Listed".
 #'
-#' @return a character vector.
+#' @return a factor of IPEDS ethnicity codes.
 #' @export
 ethnic_recode = function(Races, Ethnics){
 
 	Races[is.na(Races)] = ""
 	Ethnics[is.na(Ethnics)] = ""
 
-	dplyr::case_when(
+	res = dplyr::case_when(
 		Races == "International" ~ 'International',
 		Ethnics=='Hispanic/Latino' ~ 'Hispanic Latino',
 
@@ -38,6 +38,20 @@ ethnic_recode = function(Races, Ethnics){
 
 	)
 
+	res = factor(res,
+							 levels = c("White",
+							 					 "Black / African American",
+							 					 "Hispanic Latino",
+							 					 "Asian",
+							 					 "American Indian / Alaska Native",
+							 					 "International",
+							 					 "Unknown / Not Reported",
+							 					 "Native Hawaiian / Pacific Islander",
+							 					 "Multiracial")
+
+	)
+
+	res
 
 }
 

@@ -17,9 +17,9 @@ are not supported.}
 In
 }
 \details{
-This is the exact same as the function \code{\%in\%} from base
+This is the exact same as \code{\%fin\%} from \code{fastmatch},
 but this way I don't have to lift my finger off the shift key.
 }
 \seealso{
-\link[base]{match}
+\link[fastmatch]{fmatch} from \code{fastmatch}
 }

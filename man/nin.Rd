@@ -21,11 +21,11 @@ are not supported.}
 Not in
 }
 \details{
-Similar to the function \code{\%in\%} from base but returns true if
-there is no match. The functions \code{\%nin\%} and \code{\%NIN\%} are
+Similar to the function \code{\%in\%} from \code{base} but returns true if
+there is \strong{no} match. The functions \code{\%nin\%} and \code{\%NIN\%} are
 identical; the later is supplied so I don't have to lift my finger off
-the shift key.
+the shift key. Uses \link[fastmatch]{fmatch} from \code{fastmatch} for speed.
 }
 \seealso{
-\link[base]{match}
+\link[base]{match} from \code{base} and \link[fastmatch]{fmatch} from \code{fastmatch}
 }
