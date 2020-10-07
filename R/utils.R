@@ -49,31 +49,28 @@
 #'
 #' @details The functions \code{%like%} and \code{%LIKE%} are
 #'   identical; the later is supplied so I don't have to lift my finger off
-#'   the shift key.
+#'   the shift key. Uses \link[stringr]{str_detect} from \code{stringr} to allow
+#'   use of `stringr`'s [stringr::modifiers], such as `fixed`.
 #'
 #' @examples
 #' LETTERS[1:5] %like% "A"  #TRUE FALSE FALSE FALSE FALSE
-#' LETTERS[1:5] %LIKE% "A"  #TRUE FALSE FALSE FALSE FALSE
-#' LETTERS[1:5] %like% "a"  #TRUE FALSE FALSE FALSE FALSE
-#' LETTERS[1:5] %like% "C"  #FALSE FALSE TRUE FALSE FALSE
-#' LETTERS[1:5] %like% "X"  #FALSE FALSE FALSE FALSE FALSE
-#' "abcdX" %like% "X"       #TRUE
+#' LETTERS[1:5] %LIKE% "A"  #Same
+#' LETTERS[1:5] %LIKE% stringr::fixed("a", ignore_case = T)  #Same
+#'
+#' vec = c("")
+#'
 #'
 #' @details The matching function ignores the case of the characters.
 #'
 #' @export
 "%like%" <- function(x, y){
-	if(!is.character(x)){x = as.character(x)}
-	if(!is.character(y)){y = as.character(y)}
-	grepl(y, x, ignore.case = T, fixed = T)
+	stringr::str_detect(x, y)
 	}
 
 
 #' @rdname like
 "%LIKE%" <- function(x, y){
-	if(!is.character(x)){x = as.character(x)}
-	if(!is.character(y)){y = as.character(y)}
-	grepl(y, x, ignore.case = T, fixed = T)
+	stringr::str_detect(x, y)
 }
 
 
