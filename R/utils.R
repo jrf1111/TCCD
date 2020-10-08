@@ -16,6 +16,7 @@
 "%nin%" <- function(x, table){fastmatch::fmatch(x, table, nomatch = 0) == 0}
 
 #' @rdname nin
+#' @export
 "%NIN%" <- function(x, table){fastmatch::fmatch(x, table, nomatch = 0) == 0}
 
 
