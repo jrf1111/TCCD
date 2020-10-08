@@ -1,7 +1,7 @@
 Type: Package
 Package: TCCD
 Title: R Functions for Work at TCCD
-Version: 0.0.0.4
+Version: 0.0.0.5
 Authors@R: 
     person(given = "Jacob",
            family = "Roden-Foreman",

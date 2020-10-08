@@ -15,7 +15,7 @@ age_groups = function(age) {
 		dplyr::between(age, 26, 30 + (1 - 1e-10)) ~ "26-30",
 		dplyr::between(age, 31, 35 + (1 - 1e-10)) ~ "31-35",
 		dplyr::between(age, 36, 40 + (1 - 1e-10)) ~ "36-40",
-		gbp$age	>= 41 ~ "41 and above"
+		age	>= 41 ~ "41 and above"
 	)
 
 	res = factor(res,
