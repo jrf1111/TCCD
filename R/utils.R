@@ -70,6 +70,7 @@
 
 
 #' @rdname like
+#' @export
 "%LIKE%" <- function(x, y){
 	stringr::str_detect(x, y)
 }
