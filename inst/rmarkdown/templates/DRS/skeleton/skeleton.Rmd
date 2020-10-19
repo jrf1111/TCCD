@@ -327,7 +327,7 @@ DT::datatable(drs_info,
 														 										header = FALSE))) )
 
 
-
+rm(desc, desc_end, desc_start, drs_info, end, filename, files, i, new_name, request_info, required_date, start, submitted, team_assign, template_path)
 
 ```
 
