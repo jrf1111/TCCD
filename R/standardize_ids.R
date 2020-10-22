@@ -17,7 +17,6 @@ standardize_ids = function(id, length = 7){
 	na_post = sum(is.na(res))
 
 	if(na_pre == na_post){
-		message("Treating input argument 'id' as numeric")
 		res = formatC(res, width = length, flag = "0", format = "d")
 		return(res)
 	}
