@@ -74,6 +74,12 @@ my_read = function(path, clean_names = TRUE, blanks_to_na = TRUE, ...){
 #'
 #' @examples
 read_folder = function(path, clean_names = T, blanks_to_na = T, ...){
+
+	#if a folder
+	if(length(path) == 1 & dir.exists(path)){
+		path = list.files(path = path, full.names = TRUE)
+	}
+
 	res = rio::import_list(path, rbind = T, ...)
 
 	if(clean_names){
