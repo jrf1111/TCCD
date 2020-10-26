@@ -38,16 +38,16 @@ my_read = function(path, clean_names = TRUE, blanks_to_na = TRUE, ...){
 	if(clean_names){
 		colnames(res) = gsub(" ", "_", colnames(res))
 		colnames(res) = gsub("/", "_", colnames(res))
-		colnames(res) = gsub("+", "_plus_", colnames(res), fixed = T)
+		colnames(res) = gsub("+", "plus", colnames(res), fixed = T)
 	}
 
 	if(blanks_to_na){
 		res = lapply(res, function(x){
 			if(is.character(x)){
-			x = trimws(x)
-			x[x == ""] = NA
-			x[x == " "] = NA
-			x} else{x}
+				x = trimws(x)
+				x[x == ""] = NA
+				x[x == " "] = NA
+				x} else{x}
 		}
 		)
 
@@ -56,5 +56,48 @@ my_read = function(path, clean_names = TRUE, blanks_to_na = TRUE, ...){
 	}
 
 	return(res)
+
+}
+
+
+
+
+#' Read in a folder of data
+#'
+#' @param path A character string containing a single file name for a multi-object file (e.g., folder/directory containing data files, Excel workbook with multiple sheets, zip directory, or HTML file), or a vector of file paths for multiple files to be imported.
+#' @param clean_names Logical. Should the variable names be cleaned? Default is TRUE.
+#' @param blanks_to_na Logical. Should blank/empty character strings be converted to NAs? Default is TRUE.
+#' @param ... Other arguments passed to methods
+#'
+#' @return
+#' @export
+#'
+#' @examples
+read_folder = function(path, clean_names = T, blanks_to_na = T, ...){
+	res = rio::import_list(path, rbind = T, ...)
+
+	if(clean_names){
+		colnames(res) = gsub(" ", "_", colnames(res))
+		colnames(res) = gsub("/", "_", colnames(res))
+		colnames(res) = gsub("+", "plus", colnames(res), fixed = T)
+	}
+
+	if(blanks_to_na){
+		res = lapply(res, function(x){
+			if(is.character(x)){
+				x = trimws(x)
+				x[x == ""] = NA
+				x[x == " "] = NA
+				x} else{x}
+		}
+		)
+
+		res = as.data.frame(res)
+
+	}
+
+	return(res)
+
+
 
 }
