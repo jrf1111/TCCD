@@ -28,4 +28,6 @@ Imports:
     haven,
     readxl,
     fastmatch,
-    stringr
+    stringr,
+    rio,
+    vroom

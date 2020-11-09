@@ -7,7 +7,7 @@
 my_read(path, clean_names = TRUE, blanks_to_na = TRUE, ...)
 }
 \arguments{
-\item{path}{Character. The file to be imported. Can handle the following extensions: csv (via \link[data.table]{fread}), xls (Excel; via \link[readxl]{read_xls}), xlsx (Excel; via \link[readxl]{read_xlsx}), sav (SPSS; via \link[haven]{read_spss}), & zsav (SPSS; via \link[haven]{read_spss}).}
+\item{path}{Character. The file to be imported. Can handle the following extensions: csv (via \link[vroom]{vroom}), xls (Excel; via \link[readxl]{read_xls}), xlsx (Excel; via \link[readxl]{read_xlsx}), sav (SPSS; via \link[haven]{read_spss}), & zsav (SPSS; via \link[haven]{read_spss}).}
 
 \item{clean_names}{Logical. Should the variable names be cleaned? Default is TRUE.}
 
@@ -23,4 +23,7 @@ Read in and partially clean data quickly and effortlessly
 }
 \note{
 If importing an SPSS file (.sav or .zsav), any variables with value labels will be converted to factors as described in \link[haven]{as_factor}.
+}
+\examples{
+
 }

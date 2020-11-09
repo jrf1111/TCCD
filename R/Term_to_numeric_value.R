@@ -58,9 +58,10 @@ Term_name = function(TERM_ID){
 #' @param Qs Logical.  Should quarters be included in the term levels? Overrides the `drop` argument.
 #'
 #' @return A factor with the term levels ordered to allow sorting.
-#' @export
 #'
 #' @examples
+#'
+#' @export
 factor_term = function(Term, drop = c("outside", "all", "none"), Qs = TRUE){
 
 	drop = match.arg(drop)

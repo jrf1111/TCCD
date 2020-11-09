@@ -1,6 +1,6 @@
 #' Read in and partially clean data quickly and effortlessly
 #'
-#' @param path Character. The file to be imported. Can handle the following extensions: csv (via \link[data.table]{fread}), xls (Excel; via \link[readxl]{read_xls}), xlsx (Excel; via \link[readxl]{read_xlsx}), sav (SPSS; via \link[haven]{read_spss}), & zsav (SPSS; via \link[haven]{read_spss}).
+#' @param path Character. The file to be imported. Can handle the following extensions: csv (via \link[vroom]{vroom}), xls (Excel; via \link[readxl]{read_xls}), xlsx (Excel; via \link[readxl]{read_xlsx}), sav (SPSS; via \link[haven]{read_spss}), & zsav (SPSS; via \link[haven]{read_spss}).
 #' @param clean_names Logical. Should the variable names be cleaned? Default is TRUE.
 #' @param blanks_to_na Logical. Should blank/empty character strings be converted to NAs? Default is TRUE.
 #' @param ... Other arguments passed to other methods
@@ -9,13 +9,15 @@
 #'
 #' @return a \code{data.frame}
 #'
+#' @examples
+#'
 #' @export
 my_read = function(path, clean_names = TRUE, blanks_to_na = TRUE, ...){
 
 	ext = tail(unlist(strsplit(path, ".", fixed = T)), n=1)
 
 	if(ext == "csv"){
-		res = data.table::fread(path, ...)
+		res = vroom::vroom(path, ...)
 		class(res) = "data.frame"
 	} else if(ext == "xlsx"){
 		res = readxl::read_xlsx(path, guess_max = 10000, ...)
@@ -70,13 +72,13 @@ my_read = function(path, clean_names = TRUE, blanks_to_na = TRUE, ...){
 #' @param ... Other arguments passed to methods
 #'
 #' @return
-#' @export
-#'
 #' @examples
+#'
+#' @export
 read_folder = function(path, clean_names = T, blanks_to_na = T, ...){
 
 	#if a folder
-	if(length(path) == 1 & dir.exists(path)){
+	if(length(path) == 1 & all(dir.exists(path))){
 		path = list.files(path = path, full.names = TRUE)
 	}
 

@@ -21,3 +21,6 @@ read_folder(path, clean_names = T, blanks_to_na = T, ...)
 \description{
 Read in a folder of data
 }
+\examples{
+
+}

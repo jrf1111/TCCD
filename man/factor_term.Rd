@@ -19,3 +19,6 @@ A factor with the term levels ordered to allow sorting.
 \description{
 \code{factor_term()} takes a Term column/variable and returns it as a factor for sorting purposes.
 }
+\examples{
+
+}
