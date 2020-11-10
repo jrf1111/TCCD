@@ -20,6 +20,9 @@ In order to create the extra subtotal and total groups, this function has the un
 }
 \examples{
 
+library(tidyverse)
+library(data.table)
+
 #create sample data
 n=200
 set.seed(1)
@@ -31,14 +34,23 @@ mdata = tibble(
 )
 
 
+###################################################################
+#using with_subtotals() with multiple grouping variables
+#  Since there is more than one grouping variable,
+#  each grouping variable will have a 'subtotal' group added to it
+#  and there will be an additional 'total' group
+#  that is the grand total created by collapsing
+#  across all of the grouping variables.
+###################################################################
 
-#using with_subtotals()
+
 test = mdata \%>\%
 	group_by(class, year) \%>\%
 	with_subtotals() \%>\%
-	summarise(pass = mean(pass),
-						n = n(),
-						n_dist = n_distinct(id)
+	summarise(
+	pass = mean(pass),
+	n = n(),
+	n_dist = n_distinct(id)
 	) \%>\%
 	ungroup()
 
@@ -48,37 +60,41 @@ test2 = data.table::rbindlist(
 	list(
 		mdata \%>\%
 			group_by(class, year) \%>\%
-			summarise(pass = mean(pass),
-								n = n(),
-								n_dist = n_distinct(id)
+			summarise(
+			pass = mean(pass),
+			n = n(),
+			n_dist = n_distinct(id)
 			) \%>\%
 			ungroup(),
 
 		mdata \%>\%
 			group_by(class) \%>\%
-			summarise(pass = mean(pass),
-								n = n(),
-								n_dist = n_distinct(id),
-								year = "subtotal"
+			summarise(
+			pass = mean(pass),
+			n = n(),
+			n_dist = n_distinct(id),
+			year = "subtotal"
 			) \%>\%
 			ungroup(),
 
 		mdata \%>\%
 			group_by(year) \%>\%
-			summarise(pass = mean(pass),
-								n = n(),
-								n_dist = n_distinct(id),
-								class = "subtotal"
+			summarise(
+			pass = mean(pass),
+			n = n(),
+			n_dist = n_distinct(id),
+			class = "subtotal"
 			) \%>\%
 			ungroup(),
 
 
 		mdata \%>\%
-			summarise(pass = mean(pass),
-								n = n(),
-								n_dist = n_distinct(id),
-								class = "total",
-								year = "total"
+			summarise(
+			pass = mean(pass),
+			n = n(),
+			n_dist = n_distinct(id),
+			class = "total",
+			year = "total"
 			) \%>\%
 			ungroup()
 	),
@@ -92,5 +108,80 @@ test2 = test2 \%>\% arrange_all()
 
 all.equal(test, test2, check.attributes = FALSE)  #TRUE
 
+
+
+
+
+########################################################
+#using with_subtotals() with one grouping variable
+#  Since there is only one grouping variable,
+#  the grouping variable will have a 'subtotal' group added to it
+#  but there will *NOT* be an additional 'total' group
+#  because that would be redundant.
+########################################################
+
+test = mdata \%>\%
+	group_by(class, year) \%>\%
+	with_subtotals() \%>\%
+	summarise(
+	pass = mean(pass),
+	n = n(),
+	n_dist = n_distinct(id)
+	) \%>\%
+	ungroup()
+
+
+#the old, long, and error prone way
+test2 = data.table::rbindlist(
+	list(
+		mdata \%>\%
+			group_by(class, year) \%>\%
+			summarise(
+			pass = mean(pass),
+			n = n(),
+			n_dist = n_distinct(id)
+			) \%>\%
+			ungroup(),
+
+		mdata \%>\%
+			group_by(class) \%>\%
+			summarise(
+			pass = mean(pass),
+			n = n(),
+			n_dist = n_distinct(id),
+			year = "subtotal"
+			) \%>\%
+			ungroup(),
+
+		mdata \%>\%
+			group_by(year) \%>\%
+			summarise(
+			pass = mean(pass),
+			n = n(),
+		  n_dist = n_distinct(id),
+			class = "subtotal"
+			) \%>\%
+			ungroup(),
+
+
+		mdata \%>\%
+			summarise(
+			pass = mean(pass),
+			n = n(),
+			n_dist = n_distinct(id),
+			class = "total",
+			year = "total"
+			) \%>\%
+			ungroup()
+	),
+	use.names = TRUE
+)
+
+
+
+test = test \%>\% arrange_all()
+test2 = test2 \%>\% arrange_all()
+
+all.equal(test, test2, check.attributes = FALSE)  #TRUE
 
 }

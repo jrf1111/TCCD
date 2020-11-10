@@ -10,6 +10,9 @@
 #'
 #' @examples
 #'
+#' library(tidyverse)
+#' library(data.table)
+#'
 #' #create sample data
 #' n=200
 #' set.seed(1)
@@ -21,14 +24,23 @@
 #' )
 #'
 #'
+#' ###################################################################
+#' #using with_subtotals() with multiple grouping variables
+#' #  Since there is more than one grouping variable,
+#' #  each grouping variable will have a 'subtotal' group added to it
+#' #  and there will be an additional 'total' group
+#' #  that is the grand total created by collapsing
+#' #  across all of the grouping variables.
+#' ###################################################################
 #'
-#' #using with_subtotals()
+#'
 #' test = mdata %>%
 #' 	group_by(class, year) %>%
 #' 	with_subtotals() %>%
-#' 	summarise(pass = mean(pass),
-#' 						n = n(),
-#' 						n_dist = n_distinct(id)
+#' 	summarise(
+#' 	pass = mean(pass),
+#' 	n = n(),
+#' 	n_dist = n_distinct(id)
 #' 	) %>%
 #' 	ungroup()
 #'
@@ -38,37 +50,41 @@
 #' 	list(
 #' 		mdata %>%
 #' 			group_by(class, year) %>%
-#' 			summarise(pass = mean(pass),
-#' 								n = n(),
-#' 								n_dist = n_distinct(id)
+#' 			summarise(
+#' 			pass = mean(pass),
+#' 			n = n(),
+#' 			n_dist = n_distinct(id)
 #' 			) %>%
 #' 			ungroup(),
 #'
 #' 		mdata %>%
 #' 			group_by(class) %>%
-#' 			summarise(pass = mean(pass),
-#' 								n = n(),
-#' 								n_dist = n_distinct(id),
-#' 								year = "subtotal"
+#' 			summarise(
+#' 			pass = mean(pass),
+#' 			n = n(),
+#' 			n_dist = n_distinct(id),
+#' 			year = "subtotal"
 #' 			) %>%
 #' 			ungroup(),
 #'
 #' 		mdata %>%
 #' 			group_by(year) %>%
-#' 			summarise(pass = mean(pass),
-#' 								n = n(),
-#' 								n_dist = n_distinct(id),
-#' 								class = "subtotal"
+#' 			summarise(
+#' 			pass = mean(pass),
+#' 			n = n(),
+#' 			n_dist = n_distinct(id),
+#' 			class = "subtotal"
 #' 			) %>%
 #' 			ungroup(),
 #'
 #'
 #' 		mdata %>%
-#' 			summarise(pass = mean(pass),
-#' 								n = n(),
-#' 								n_dist = n_distinct(id),
-#' 								class = "total",
-#' 								year = "total"
+#' 			summarise(
+#' 			pass = mean(pass),
+#' 			n = n(),
+#' 			n_dist = n_distinct(id),
+#' 			class = "total",
+#' 			year = "total"
 #' 			) %>%
 #' 			ungroup()
 #' 	),
@@ -83,6 +99,84 @@
 #' all.equal(test, test2, check.attributes = FALSE)  #TRUE
 #'
 #'
+#'
+#'
+#'
+#' ########################################################
+#' #using with_subtotals() with one grouping variable
+#' #  Since there is only one grouping variable,
+#' #  the grouping variable will have a 'subtotal' group added to it
+#' #  but there will *NOT* be an additional 'total' group
+#' #  because that would be redundant.
+#' ########################################################
+#'
+#' test = mdata %>%
+#' 	group_by(class, year) %>%
+#' 	with_subtotals() %>%
+#' 	summarise(
+#' 	pass = mean(pass),
+#' 	n = n(),
+#' 	n_dist = n_distinct(id)
+#' 	) %>%
+#' 	ungroup()
+#'
+#'
+#' #the old, long, and error prone way
+#' test2 = data.table::rbindlist(
+#' 	list(
+#' 		mdata %>%
+#' 			group_by(class, year) %>%
+#' 			summarise(
+#' 			pass = mean(pass),
+#' 			n = n(),
+#' 			n_dist = n_distinct(id)
+#' 			) %>%
+#' 			ungroup(),
+#'
+#' 		mdata %>%
+#' 			group_by(class) %>%
+#' 			summarise(
+#' 			pass = mean(pass),
+#' 			n = n(),
+#' 			n_dist = n_distinct(id),
+#' 			year = "subtotal"
+#' 			) %>%
+#' 			ungroup(),
+#'
+#' 		mdata %>%
+#' 			group_by(year) %>%
+#' 			summarise(
+#' 			pass = mean(pass),
+#' 			n = n(),
+#' 		  n_dist = n_distinct(id),
+#' 			class = "subtotal"
+#' 			) %>%
+#' 			ungroup(),
+#'
+#'
+#' 		mdata %>%
+#' 			summarise(
+#' 			pass = mean(pass),
+#' 			n = n(),
+#' 			n_dist = n_distinct(id),
+#' 			class = "total",
+#' 			year = "total"
+#' 			) %>%
+#' 			ungroup()
+#' 	),
+#' 	use.names = TRUE
+#' )
+#'
+#'
+#'
+#' test = test %>% arrange_all()
+#' test2 = test2 %>% arrange_all()
+#'
+#' all.equal(test, test2, check.attributes = FALSE)  #TRUE
+
+
+
+#'
 #' @export
 with_subtotals = function(df){
 
@@ -93,54 +187,81 @@ with_subtotals = function(df){
 
 	df = dplyr::ungroup(df)
 
-	#a backup for getting overall totals later
-	original_df = dplyr::ungroup(df)
+	if(length(groups) > 1){
 
-	#for each group var, make a new 'subtotal' group
-	for(i in 1:length(groups)){
-		group = groups[i]
+		#a backup for getting overall totals later
+		original_df = dplyr::ungroup(df)
+
+		#for each group var, make a new 'subtotal' group
+		for(i in 1:length(groups)){
+			group = groups[i]
+			var = rlang::sym(group)
+
+			if(is.factor(dplyr::pull(df, {{ group }} ))){
+				df = df %>% dplyr::mutate(
+					{{ group }} := forcats::fct_expand( !!var , "subtotal", "total")
+				)
+			} else if(!is.character(dplyr::pull(df, {{ group }} ))){
+				df = df %>% dplyr::mutate( {{ group }} := as.character( !!var ) )
+			}
+
+			if(i == 1){
+				temp = df %>% dplyr::mutate({{ group }} := "subtotal")
+			} else{
+				temp2 = df %>% dplyr::mutate({{ group }} := "subtotal")
+				old_classes = class(temp)
+				temp = data.table::rbindlist(list(temp, temp2))
+				class(temp) = old_classes
+				rm(temp2)
+			}
+
+		}
+
+		#add the subtotals to the data
+		old_classes = class(df)
+		df = data.table::rbindlist(list(df, temp))
+		class(df) = old_classes
+
+
+
+		#make a 'total' group
+		temp = original_df %>% dplyr::mutate_at(dplyr::vars(!!!groups), ~ "total")
+
+		#add the 'total' group to the data
+		old_classes = class(df)
+		df = data.table::rbindlist(list(df, temp))
+		class(df) = old_classes
+		rm(original_df, temp)
+	}
+
+
+	if(length(groups) == 1){
+
+		#make a new 'subtotal' group for the one group var
+		group = groups[1]
 		var = rlang::sym(group)
 
 		if(is.factor(dplyr::pull(df, {{ group }} ))){
 			df = df %>% dplyr::mutate(
-				{{ group }} := forcats::fct_expand( !!var , "subtotal", "total")
+				{{ group }} := forcats::fct_expand( !!var , "subtotal")
 			)
 		} else if(!is.character(dplyr::pull(df, {{ group }} ))){
 			df = df %>% dplyr::mutate( {{ group }} := as.character( !!var ) )
 		}
 
-		if(i == 1){
-			temp = df %>% dplyr::mutate({{ group }} := "subtotal")
-		} else{
-			temp2 = df %>% dplyr::mutate({{ group }} := "subtotal")
-			old_classes = class(temp)
-			temp = data.table::rbindlist(list(temp, temp2))
-			class(temp) = old_classes
-			rm(temp2)
-		}
+		temp = df %>% dplyr::mutate({{ group }} := "subtotal")
+
+		#add the subtotal to the data
+		old_classes = class(df)
+		df = data.table::rbindlist(list(df, temp))
+		class(df) = old_classes
+		rm(temp)
 
 	}
-
-	#add the subtotals to the data
-	old_classes = class(df)
-	df = data.table::rbindlist(list(df, temp))
-	class(df) = old_classes
-
-
-	#make a 'grand total' group
-	temp = original_df %>% dplyr::mutate_at(dplyr::vars(!!!groups), ~ "total")
-
-	#add the 'grand total' group to the data
-	old_classes = class(df)
-	df = data.table::rbindlist(list(df, temp))
-	class(df) = old_classes
-	rm(original_df, temp)
-
 
 	#restore grouping variables
 	df = dplyr::group_by(df, !!!rlang::syms(groups))
 	df
-
 
 }
 
