@@ -121,7 +121,7 @@ all.equal(test, test2, check.attributes = FALSE)  #TRUE
 ########################################################
 
 test = mdata \%>\%
-	group_by(class, year) \%>\%
+	group_by(class) \%>\%
 	with_subtotals() \%>\%
 	summarise(
 	pass = mean(pass),
@@ -135,7 +135,7 @@ test = mdata \%>\%
 test2 = data.table::rbindlist(
 	list(
 		mdata \%>\%
-			group_by(class, year) \%>\%
+			group_by(class) \%>\%
 			summarise(
 			pass = mean(pass),
 			n = n(),
@@ -144,33 +144,11 @@ test2 = data.table::rbindlist(
 			ungroup(),
 
 		mdata \%>\%
-			group_by(class) \%>\%
 			summarise(
 			pass = mean(pass),
 			n = n(),
 			n_dist = n_distinct(id),
-			year = "subtotal"
-			) \%>\%
-			ungroup(),
-
-		mdata \%>\%
-			group_by(year) \%>\%
-			summarise(
-			pass = mean(pass),
-			n = n(),
-		  n_dist = n_distinct(id),
 			class = "subtotal"
-			) \%>\%
-			ungroup(),
-
-
-		mdata \%>\%
-			summarise(
-			pass = mean(pass),
-			n = n(),
-			n_dist = n_distinct(id),
-			class = "total",
-			year = "total"
 			) \%>\%
 			ungroup()
 	),
@@ -183,5 +161,7 @@ test = test \%>\% arrange_all()
 test2 = test2 \%>\% arrange_all()
 
 all.equal(test, test2, check.attributes = FALSE)  #TRUE
+
+
 
 }

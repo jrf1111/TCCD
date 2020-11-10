@@ -111,7 +111,7 @@
 #' ########################################################
 #'
 #' test = mdata %>%
-#' 	group_by(class, year) %>%
+#' 	group_by(class) %>%
 #' 	with_subtotals() %>%
 #' 	summarise(
 #' 	pass = mean(pass),
@@ -125,7 +125,7 @@
 #' test2 = data.table::rbindlist(
 #' 	list(
 #' 		mdata %>%
-#' 			group_by(class, year) %>%
+#' 			group_by(class) %>%
 #' 			summarise(
 #' 			pass = mean(pass),
 #' 			n = n(),
@@ -134,33 +134,11 @@
 #' 			ungroup(),
 #'
 #' 		mdata %>%
-#' 			group_by(class) %>%
 #' 			summarise(
 #' 			pass = mean(pass),
 #' 			n = n(),
 #' 			n_dist = n_distinct(id),
-#' 			year = "subtotal"
-#' 			) %>%
-#' 			ungroup(),
-#'
-#' 		mdata %>%
-#' 			group_by(year) %>%
-#' 			summarise(
-#' 			pass = mean(pass),
-#' 			n = n(),
-#' 		  n_dist = n_distinct(id),
 #' 			class = "subtotal"
-#' 			) %>%
-#' 			ungroup(),
-#'
-#'
-#' 		mdata %>%
-#' 			summarise(
-#' 			pass = mean(pass),
-#' 			n = n(),
-#' 			n_dist = n_distinct(id),
-#' 			class = "total",
-#' 			year = "total"
 #' 			) %>%
 #' 			ungroup()
 #' 	),
@@ -173,9 +151,8 @@
 #' test2 = test2 %>% arrange_all()
 #'
 #' all.equal(test, test2, check.attributes = FALSE)  #TRUE
-
-
-
+#'
+#'
 #'
 #' @export
 with_subtotals = function(df){
