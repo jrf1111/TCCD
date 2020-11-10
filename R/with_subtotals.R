@@ -1,25 +1,100 @@
-
-library(tidyverse)
-library(rlang)
-
-n=200
-set.seed(1)
-mdata = tibble(
-	id = sample(1:10, size=n, replace = T),
-	year = ceiling(id/4),
-	class = factor(sample(letters[1:5], size=n, replace = T)),
-	pass = rbinom(n, size = 1, prob = 0.5)
-)
-
-
-
-
+#' Add subtotals to grouped `dplyr` operations
+#'
+#' @param df A grouped data frame or data frame extension (e.g. a tibble)
+#'
+#' @return A grouped object of the same type as `df` but with additional rows that contain group subtotals and totals.
+#'
+#' @note In order to create the extra subtotal and total groups, this function has the unfortunate side effect of increasing the number of rows of `df`. This may result in performance issues and/or exhaust available memory. It may, therefore, be advisable to pass a reduced version of `df` containing only the variables necessary to perform the desired operation(s), for example, by calling `select()` before `group_by(...) %>% with_subtotals()`.
+#'
+#'
+#'
+#' @examples
+#'
+#' #create sample data
+#' n=200
+#' set.seed(1)
+#' mdata = tibble(
+#' 	id = sample(1:10, size=n, replace = T),
+#' 	year = ceiling(id/4),
+#' 	class = factor(sample(letters[1:5], size=n, replace = T)),
+#' 	pass = rbinom(n, size = 1, prob = 0.5)
+#' )
+#'
+#'
+#'
+#' #using with_subtotals()
+#' test = mdata %>%
+#' 	group_by(class, year) %>%
+#' 	with_subtotals() %>%
+#' 	summarise(pass = mean(pass),
+#' 						n = n(),
+#' 						n_dist = n_distinct(id)
+#' 	) %>%
+#' 	ungroup()
+#'
+#'
+#' #the old, long, and error prone way
+#' test2 = data.table::rbindlist(
+#' 	list(
+#' 		mdata %>%
+#' 			group_by(class, year) %>%
+#' 			summarise(pass = mean(pass),
+#' 								n = n(),
+#' 								n_dist = n_distinct(id)
+#' 			) %>%
+#' 			ungroup(),
+#'
+#' 		mdata %>%
+#' 			group_by(class) %>%
+#' 			summarise(pass = mean(pass),
+#' 								n = n(),
+#' 								n_dist = n_distinct(id),
+#' 								year = "subtotal"
+#' 			) %>%
+#' 			ungroup(),
+#'
+#' 		mdata %>%
+#' 			group_by(year) %>%
+#' 			summarise(pass = mean(pass),
+#' 								n = n(),
+#' 								n_dist = n_distinct(id),
+#' 								class = "subtotal"
+#' 			) %>%
+#' 			ungroup(),
+#'
+#'
+#' 		mdata %>%
+#' 			summarise(pass = mean(pass),
+#' 								n = n(),
+#' 								n_dist = n_distinct(id),
+#' 								class = "total",
+#' 								year = "total"
+#' 			) %>%
+#' 			ungroup()
+#' 	),
+#' 	use.names = TRUE
+#' )
+#'
+#'
+#'
+#' test = test %>% arrange_all()
+#' test2 = test2 %>% arrange_all()
+#'
+#' all.equal(test, test2, check.attributes = FALSE)  #TRUE
+#'
+#'
+#' @export
 with_subtotals = function(df){
 
-	#get the group vars
+	#get the grouping vars
 	groups = dplyr::group_vars(df)
-	original_df = dplyr::ungroup(df)
+
+	stopifnot(length(groups)>0)
+
 	df = dplyr::ungroup(df)
+
+	#a backup for getting overall totals later
+	original_df = dplyr::ungroup(df)
 
 	#for each group var, make a new 'subtotal' group
 	for(i in 1:length(groups)){
@@ -46,6 +121,7 @@ with_subtotals = function(df){
 
 	}
 
+	#add the subtotals to the data
 	old_classes = class(df)
 	df = data.table::rbindlist(list(df, temp))
 	class(df) = old_classes
@@ -53,13 +129,15 @@ with_subtotals = function(df){
 
 	#make a 'grand total' group
 	temp = original_df %>% dplyr::mutate_at(dplyr::vars(!!!groups), ~ "total")
+
+	#add the 'grand total' group to the data
 	old_classes = class(df)
 	df = data.table::rbindlist(list(df, temp))
 	class(df) = old_classes
 	rm(original_df, temp)
 
 
-
+	#restore grouping variables
 	df = dplyr::group_by(df, !!!rlang::syms(groups))
 	df
 
@@ -67,64 +145,10 @@ with_subtotals = function(df){
 }
 
 
-test = mdata %>%
-	group_by(class, year) %>%
-	with_subtotals() %>%
-	summarise(pass = mean(pass),
-						n = n(),
-						n_dist = n_distinct(id)
-	) %>%
-	ungroup()
 
 
 
 
 
 
-test2 = data.table::rbindlist(
-	list(
-		mdata %>%
-			group_by(class, year) %>%
-			summarise(pass = mean(pass),
-								n = n(),
-								n_dist = n_distinct(id)
-			) %>%
-			ungroup(),
 
-		mdata %>%
-			group_by(class) %>%
-			summarise(pass = mean(pass),
-								n = n(),
-								n_dist = n_distinct(id),
-								year = "subtotal"
-			) %>%
-			ungroup(),
-
-		mdata %>%
-			group_by(year) %>%
-			summarise(pass = mean(pass),
-								n = n(),
-								n_dist = n_distinct(id),
-								class = "subtotal"
-			) %>%
-			ungroup(),
-
-
-		mdata %>%
-			summarise(pass = mean(pass),
-								n = n(),
-								n_dist = n_distinct(id),
-								class = "total",
-								year = "total"
-			) %>%
-			ungroup()
-	),
-	use.names = TRUE
-)
-
-
-
-test = test %>% arrange_all()
-test2 = test2 %>% arrange_all()
-
-all.equal(test, test2, check.attributes = FALSE)

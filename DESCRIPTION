@@ -30,4 +30,5 @@ Imports:
     fastmatch,
     stringr,
     rio,
-    vroom
+    vroom,
+    rlang
