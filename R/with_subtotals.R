@@ -169,9 +169,10 @@ with_subtotals = function(df){
 		#a backup for getting overall totals later
 		original_df = dplyr::ungroup(df)
 
+
 		#for each group var, make a new 'subtotal' group
-		for(i in 1:length(groups)){
-			group = groups[i]
+		subtotal = function(df, group){
+
 			var = rlang::sym(group)
 
 			if(is.factor(dplyr::pull(df, {{ group }} ))){
@@ -182,33 +183,23 @@ with_subtotals = function(df){
 				df = df %>% dplyr::mutate( {{ group }} := as.character( !!var ) )
 			}
 
-			if(i == 1){
-				temp = df %>% dplyr::mutate({{ group }} := "subtotal")
-			} else{
-				temp2 = df %>% dplyr::mutate({{ group }} := "subtotal")
-				old_classes = class(temp)
-				temp = data.table::rbindlist(list(temp, temp2))
-				class(temp) = old_classes
-				rm(temp2)
-			}
+			df %>% dplyr::mutate({{ group }} := "subtotal")
 
 		}
 
-		#add the subtotals to the data
-		old_classes = class(df)
-		df = data.table::rbindlist(list(df, temp))
-		class(df) = old_classes
-
+		subs = data.table::rbindlist(
+			lapply(groups, function(x){subtotal(df, x)}),
+			use.names = TRUE, fill = TRUE )
 
 
 		#make a 'total' group
-		temp = original_df %>% dplyr::mutate_at(dplyr::vars(!!!groups), ~ "total")
+		total = original_df %>% dplyr::mutate_at(dplyr::vars(!!!groups), ~ "total")
 
-		#add the 'total' group to the data
+		#add the subtotals and total group to the data
 		old_classes = class(df)
-		df = data.table::rbindlist(list(df, temp))
+		df = data.table::rbindlist(list(df, subs, total))
 		class(df) = old_classes
-		rm(original_df, temp)
+		rm(original_df, subs, total)
 	}
 
 
@@ -241,11 +232,6 @@ with_subtotals = function(df){
 	df
 
 }
-
-
-
-
-
 
 
 
