@@ -35,7 +35,7 @@ mdata = tibble(
 
 
 ###################################################################
-#using with_subtotals() with multiple grouping variables
+#Using with_subtotals() with multiple grouping variables
 #  Since there is more than one grouping variable,
 #  each grouping variable will have a 'subtotal' group added to it
 #  and there will be an additional 'total' group
@@ -113,7 +113,7 @@ all.equal(test, test2, check.attributes = FALSE)  #TRUE
 
 
 ########################################################
-#using with_subtotals() with one grouping variable
+#Using with_subtotals() with one grouping variable
 #  Since there is only one grouping variable,
 #  the grouping variable will have a 'subtotal' group added to it
 #  but there will *NOT* be an additional 'total' group
