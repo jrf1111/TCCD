@@ -33,6 +33,7 @@ term_num_to_acad_year = function(Term_num){
 		Term_num %in% c(54:56)  ~ '2021-2022',
 		TRUE ~ as.character(Term_num))
 
+	res
 
 }
 

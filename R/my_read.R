@@ -41,12 +41,13 @@ my_read = function(path, clean_names = TRUE, blanks_to_na = TRUE, ...){
 		colnames(res) = gsub(" ", "_", colnames(res))
 		colnames(res) = gsub("/", "_", colnames(res))
 		colnames(res) = gsub("+", "plus", colnames(res), fixed = T)
+		colnames(res) = gsub("__", "_", colnames(res))
 	}
 
 	if(blanks_to_na){
 		res = lapply(res, function(x){
 			if(is.character(x)){
-				x = trimws(x)
+				x = stringr::str_trim(x)
 				x[x == ""] = NA
 				x[x == " "] = NA
 				x} else{x}
