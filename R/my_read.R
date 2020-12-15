@@ -78,12 +78,20 @@ my_read = function(path, clean_names = TRUE, blanks_to_na = TRUE, ...){
 #' @export
 read_folder = function(path, clean_names = T, blanks_to_na = T, ...){
 
-	#if a folder
+	#if a folder, convert to files
 	if(length(path) == 1 & all(dir.exists(path))){
 		path = list.files(path = path, full.names = TRUE)
 	}
 
-	res = rio::import_list(path, rbind = T, ...)
+	#are all files csv?
+	exts = unlist(strsplit(path, ".", fixed = T))
+	exts = exts[c(FALSE, TRUE)] #every other element (just extensions)
+	if(all(exts == "csv")){
+		res = vroom::vroom(path)
+	} else{
+		res = rio::import_list(path, rbind = T, ...)
+	}
+
 
 	if(clean_names){
 		colnames(res) = gsub(" ", "_", colnames(res))
