@@ -10,47 +10,25 @@ with_subtotals(df)
 \item{df}{A grouped data frame or data frame extension (e.g. a tibble)}
 }
 \value{
-A grouped object of the same type as \code{df} but with additional rows that contain group subtotals and totals.
+A grouped object of the same type as \code{df} but with additional rows that contain group (sub)totals and grand totals.
 }
 \description{
 Add subtotals to grouped \code{dplyr} operations
 }
 \note{
-In order to create the extra subtotal and total groups, this function has the unfortunate side effect of increasing the number of rows of \code{df}. This may result in performance issues and/or exhaust available memory. It may, therefore, be advisable to pass a reduced version of \code{df} containing only the variables necessary to perform the desired operation(s), for example, by calling \code{select()} before \code{group_by(...) \%>\% with_subtotals()}.
+In order to create the extra subtotal and total groups, this function has two unfortunate side effects.  The first side effect is that it increases the number of rows of \code{df}. This may result in performance issues and/or exhaust available memory. It may, therefore, be advisable to pass a reduced version of \code{df} containing only the variables necessary to perform the desired operation(s), for example, by calling \code{select()} before \code{group_by(...) \%>\% with_subtotals()}.  The second side effect is that in order to create the total groups, it must \emph{make} the total group for each grouping variable.  Currently, this is achieved by (1) converting numeric variables to characters or adding a new level to factors then (2) adding the new \code{total_} group (a value that hopefully does not already exist in the grouping variable).  Future versions of this function will hopefully address these limitations.
 }
 \examples{
 
 library(tidyverse)
 library(data.table)
 
-#create sample data
-n=200
-set.seed(1)
-mdata = tibble(
-	id = sample(1:10, size=n, replace = T),
-	year = ceiling(id/4),
-	class = factor(sample(letters[1:5], size=n, replace = T)),
-	pass = rbinom(n, size = 1, prob = 0.5)
-)
-
-
-###################################################################
-#Using with_subtotals() with multiple grouping variables
-#  Since there is more than one grouping variable,
-#  each grouping variable will have a 'subtotal' group added to it
-#  and there will be an additional 'total' group
-#  that is the grand total created by collapsing
-#  across all of the grouping variables.
-###################################################################
-
-
-test = mdata \%>\%
-	group_by(class, year) \%>\%
+test = mtcars \%>\%
+	group_by(cyl, am) \%>\%
 	with_subtotals() \%>\%
 	summarise(
-	pass = mean(pass),
 	n = n(),
-	n_dist = n_distinct(id)
+	mean_mpg = mean(mpg)
 	) \%>\%
 	ungroup()
 
@@ -58,43 +36,39 @@ test = mdata \%>\%
 #the old, long, and error prone way
 test2 = data.table::rbindlist(
 	list(
-		mdata \%>\%
-			group_by(class, year) \%>\%
+		mtcars \%>\%
+			group_by(cyl, am) \%>\%
 			summarise(
-			pass = mean(pass),
 			n = n(),
-			n_dist = n_distinct(id)
+			mean_mpg = mean(mpg)
 			) \%>\%
 			ungroup(),
 
-		mdata \%>\%
-			group_by(class) \%>\%
+		mtcars \%>\%
+			group_by(cyl) \%>\%
 			summarise(
-			pass = mean(pass),
 			n = n(),
-			n_dist = n_distinct(id),
-			year = "subtotal"
+			mean_mpg = mean(mpg),
+			am = "total_"
 			) \%>\%
 			ungroup(),
 
-		mdata \%>\%
-			group_by(year) \%>\%
+		mtcars \%>\%
+			group_by(am) \%>\%
 			summarise(
-			pass = mean(pass),
 			n = n(),
-			n_dist = n_distinct(id),
-			class = "subtotal"
+			mean_mpg = mean(mpg),
+			cyl = "total_"
 			) \%>\%
 			ungroup(),
 
 
-		mdata \%>\%
+		mtcars \%>\%
 			summarise(
-			pass = mean(pass),
 			n = n(),
-			n_dist = n_distinct(id),
-			class = "total",
-			year = "total"
+			mean_mpg = mean(mpg),
+			am = "total_",
+			cyl = "total_"
 			) \%>\%
 			ungroup()
 	),
@@ -110,57 +84,6 @@ all.equal(test, test2, check.attributes = FALSE)  #TRUE
 
 
 
-
-
-########################################################
-#Using with_subtotals() with one grouping variable
-#  Since there is only one grouping variable,
-#  the grouping variable will have a 'subtotal' group added to it
-#  but there will *NOT* be an additional 'total' group
-#  because that would be redundant.
-########################################################
-
-test = mdata \%>\%
-	group_by(class) \%>\%
-	with_subtotals() \%>\%
-	summarise(
-	pass = mean(pass),
-	n = n(),
-	n_dist = n_distinct(id)
-	) \%>\%
-	ungroup()
-
-
-#the old, long, and error prone way
-test2 = data.table::rbindlist(
-	list(
-		mdata \%>\%
-			group_by(class) \%>\%
-			summarise(
-			pass = mean(pass),
-			n = n(),
-			n_dist = n_distinct(id)
-			) \%>\%
-			ungroup(),
-
-		mdata \%>\%
-			summarise(
-			pass = mean(pass),
-			n = n(),
-			n_dist = n_distinct(id),
-			class = "subtotal"
-			) \%>\%
-			ungroup()
-	),
-	use.names = TRUE
-)
-
-
-
-test = test \%>\% arrange_all()
-test2 = test2 \%>\% arrange_all()
-
-all.equal(test, test2, check.attributes = FALSE)  #TRUE
 
 
 
