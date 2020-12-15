@@ -2,89 +2,189 @@
 % Please edit documentation in R/with_subtotals.R
 \name{with_subtotals}
 \alias{with_subtotals}
-\title{Add subtotals to grouped \code{dplyr} operations}
+\title{Add subtotals to grouped operations}
 \usage{
-with_subtotals(df)
+with_subtotals(df, method = c("change", "agg_level"))
 }
 \arguments{
 \item{df}{A grouped data frame or data frame extension (e.g. a tibble)}
+
+\item{method}{a character string indicating which method is to be used.
+Either "change" (the default) or "agg_level". \code{method} can be abbreviated.}
 }
 \value{
-A grouped object of the same type as \code{df} but with additional rows that contain group (sub)totals and grand totals.
+A grouped object of the same type as \code{df} but with additional rows
+that contain group (sub)totals and grand totals. If \code{method = "agg_level"},
+a new variable called \code{.agg_level} will also be added.
 }
 \description{
-Add subtotals to grouped \code{dplyr} operations
+\code{with_subtotals()} appends a grouped data frame or data frame extension (e.g. a tibble)
+to allow easy calculation of group totals and grand totals with \code{summarise()}.
 }
-\note{
-In order to create the extra subtotal and total groups, this function has two unfortunate side effects.  The first side effect is that it increases the number of rows of \code{df}. This may result in performance issues and/or exhaust available memory. It may, therefore, be advisable to pass a reduced version of \code{df} containing only the variables necessary to perform the desired operation(s), for example, by calling \code{select()} before \code{group_by(...) \%>\% with_subtotals()}.  The second side effect is that in order to create the total groups, it must \emph{make} the total group for each grouping variable.  Currently, this is achieved by (1) converting numeric variables to characters or adding a new level to factors then (2) adding the new \code{total_} group (a value that hopefully does not already exist in the grouping variable).  Future versions of this function will hopefully address these limitations.
+\details{
+In order to create the extra subtotal and total groups, this function
+has two unfortunate side effects.
+
+The first side effect is that it increases the number of rows of \code{df}
+(sometimes drastically). This may result in performance issues and/or
+exhaust available memory. Therefore, it may be advisable to pass a reduced
+version of \code{df} containing only the variables necessary to perform the
+desired operation(s). For example, by calling \code{select()} before
+\code{group_by(...) \%>\% with_subtotals()}.
+
+The second side effect is that in order to create the total groups, it must
+actually \emph{make} the total group for each grouping variable. When \code{method = "change"}
+(the default), this is achieved by (1) converting numeric variables to
+characters or adding a new level to factors then (2) adding the new \code{total_}
+group (a value that hopefully does not already exist in the grouping variable).
+This is the default behavior because it allows results to be easily
+passed to \link[tidyr]{pivot_wider} and because most use cases of \code{with_subtotals}
+will not require (much) processing after calling \code{summarise(...)}.
+If this behavior is problematic and the results need to have the same data
+types as \code{df}, the user should specify \code{method = "agg_level"}.
+Using \code{method = "agg_level"} will preserve the data types in \code{df} and it
+will add a new variable called \code{.agg_level} to indicate the level of
+aggregation in the result.
 }
 \examples{
 
 library(tidyverse)
 library(data.table)
 
-test = mtcars \%>\%
-	group_by(cyl, am) \%>\%
-	with_subtotals() \%>\%
-	summarise(
-	n = n(),
-	mean_mpg = mean(mpg)
-	) \%>\%
-	ungroup()
+new = mtcars \%>\%
+ 	group_by(cyl, am) \%>\%
+ 	with_subtotals() \%>\%
+ 	summarise(
+ 	n = n(),
+ 	mean_mpg = mean(mpg)
+ 	) \%>\%
+ 	ungroup()
 
 
-#the old, long, and error prone way
-test2 = data.table::rbindlist(
-	list(
-		mtcars \%>\%
-			group_by(cyl, am) \%>\%
-			summarise(
-			n = n(),
-			mean_mpg = mean(mpg)
-			) \%>\%
-			ungroup(),
+# the old, long, and error prone way
+old <- data.table::rbindlist(
+  list(
+    mtcars \%>\%
+      group_by(cyl, am) \%>\%
+      summarise(
+        n = n(),
+        mean_mpg = mean(mpg)
+      ) \%>\%
+      ungroup(),
 
-		mtcars \%>\%
-			group_by(cyl) \%>\%
-			summarise(
-			n = n(),
-			mean_mpg = mean(mpg),
-			am = "total_"
-			) \%>\%
-			ungroup(),
+    mtcars \%>\%
+      group_by(cyl) \%>\%
+      summarise(
+        n = n(),
+        mean_mpg = mean(mpg),
+        am = "total_"
+      ) \%>\%
+      ungroup(),
 
-		mtcars \%>\%
-			group_by(am) \%>\%
-			summarise(
-			n = n(),
-			mean_mpg = mean(mpg),
-			cyl = "total_"
-			) \%>\%
-			ungroup(),
+    mtcars \%>\%
+      group_by(am) \%>\%
+      summarise(
+        n = n(),
+        mean_mpg = mean(mpg),
+        cyl = "total_"
+      ) \%>\%
+      ungroup(),
+
+    mtcars \%>\%
+      summarise(
+        n = n(),
+        mean_mpg = mean(mpg),
+        am = "total_",
+        cyl = "total_"
+      ) \%>\%
+      ungroup()
+  ),
+  use.names = TRUE
+)
 
 
-		mtcars \%>\%
-			summarise(
-			n = n(),
-			mean_mpg = mean(mpg),
-			am = "total_",
-			cyl = "total_"
-			) \%>\%
-			ungroup()
-	),
-	use.names = TRUE
+new <- new \%>\% arrange_all()
+old <- old \%>\% arrange_all()
+
+all.equal(old, new, check.attributes = FALSE) # TRUE
+
+
+
+
+
+# comparing `method = "change"` vs. `method = "agg_level"`
+change <- mtcars \%>\%
+  group_by(cyl, am) \%>\%
+  with_subtotals(method = "change") \%>\% # the default
+  summarise(
+    n = n(),
+    mean_mpg = mean(mpg)
+  ) \%>\%
+  ungroup()
+
+agg_level <- mtcars \%>\%
+  group_by(cyl, am) \%>\%
+  with_subtotals(method = "agg_level") \%>\%
+  summarise(
+    n = n(),
+    mean_mpg = mean(mpg)
+  ) \%>\%
+  ungroup()
+
+# agg_level maintains the original data types and
+# agg_level looks better when printed as is
+change
+agg_level
+
+
+# but change makes it easier to pivot_wider
+change \%>\% pivot_wider(
+  id_cols = cyl,
+  names_from = am,
+  names_prefix = "am_",
+  values_from = c(n, mean_mpg)
+)
+
+
+agg_level \%>\% pivot_wider(
+  id_cols = c(.agg_level, cyl),
+  names_from = am,
+  names_prefix = "am_",
+  values_from = c(n, mean_mpg)
 )
 
 
 
-test = test \%>\% arrange_all()
-test2 = test2 \%>\% arrange_all()
 
-all.equal(test, test2, check.attributes = FALSE)  #TRUE
+# both `method = "change"` and `method = "agg_level"`
+# work better than other potential solutions
+# if there are NAs in the grouping variables
+#(see https://stackoverflow.com/questions/31164350)
 
+df <- mtcars
+df$carb[3] <- NA # was 1
 
+# see rows 3 & 4; you can't tell what is a subtotal vs. missing data
+bind_rows(
+  df \%>\%
+    group_by(cyl, carb) \%>\%
+    summarise(Mean = mean(disp)),
+  df \%>\%
+    group_by(cyl) \%>\%
+    summarise(carb = NA, Mean = mean(disp)),
+  df \%>\%
+    group_by(carb) \%>\%
+    summarise(cyl = NA, Mean = mean(disp))
+) \%>\% arrange(cyl, carb)
 
+# compare that to using `with_subtotals()`
+df \%>\%
+  group_by(cyl, carb) \%>\%
+  with_subtotals() \%>\%
+  summarise(Mean = mean(disp))
 
-
-
+df \%>\%
+  group_by(cyl, carb) \%>\%
+  with_subtotals(method = "agg_level") \%>\%
+  summarise(Mean = mean(disp))
 }
