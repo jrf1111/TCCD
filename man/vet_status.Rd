@@ -4,12 +4,14 @@
 \alias{vet_status}
 \title{Veteran and Military-Connected Status}
 \usage{
-vet_status(Military_Statuses, Smv_Vetben_Elig_Code)
+vet_status(Military_Statuses, Smv_Vetben_Elig_Code, active = FALSE)
 }
 \arguments{
 \item{Military_Statuses}{Military status code, usually from Student Summary General}
 
 \item{Smv_Vetben_Elig_Code}{Veteran benefits eligibility code, usually from Student Summary General}
+
+\item{active}{Logical.  Should active-duty be its own category? Default is \code{FALSE}.}
 }
 \value{
 Returns a character vector indicating if student is a veteran, dependent, or not-military connected
