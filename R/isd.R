@@ -194,7 +194,7 @@ isd = function(High_School){
 		High_School == "NAZARENE CHRISTIAN ACADEMY" ~ "yPrivate/Charter",
 		High_School ==  'NORTHSIDE HIGH SCHOOL' ~ 'Houston ISD',
 		High_School ==  'I M TERRELL HS' ~ 'Fort Worth ISD',
-		High_School ==  'COLLEGIATE ACADEMY AT O, D, WYATT HIGH SCHOOL' ~ 'Fort Worth ISD',
+		High_School ==  'COLLEGIATE ACADEMY AT O. D. WYATT HIGH SCHOOL' ~ 'Fort Worth ISD',
 		High_School ==  'AISD ARLINGTON COLLEGE CAREER HIGH SCHOOL' ~ 'Arlington ISD',
 		High_School ==  'SUCCESS HIGH SCHOOL' ~ 'Fort Worth ISD',
 		High_School ==  'VENUS HIGH SCHOOL' ~ 'Venus ISD',
@@ -346,6 +346,8 @@ isd = function(High_School){
 		High_School == "EASTERN HILLS COLLEGIATE PTECH HS" ~ "Fort Worth ISD",
 		High_School == "POLYTECHNIC COLLEGIATE PTECH HS" ~ "Fort Worth ISD",
 		High_School == "WORLD LANGUAGES INSTITUTE" ~ "Fort Worth ISD",
+		High_School == "COLLEGIATE ACADEMY BIRDVILLE (442510)" ~ "Birdville ISD",
+		High_School == "ECHS AT TIMBERVIEW HS" ~ "Mansfield ISD",
 		TRUE ~ "zUnknown ISD"
 	)
 
