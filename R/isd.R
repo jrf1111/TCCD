@@ -342,6 +342,10 @@ isd = function(High_School){
 		High_School == "JACKSONVILLE HIGH SCHOOL" ~ "Jacksonville ISD",
 		High_School == "JAMES E TAYLOR HIGH SCHOOL" ~ "Katy ISD",
 		High_School == "JAMES EARL RUDDER HS" ~ "Bryan ISD",
+		High_School == "TCC SO FWISD COLLEGIATE P-TECH" ~ "Fort Worth ISD",
+		High_School == "EASTERN HILLS COLLEGIATE PTECH HS" ~ "Fort Worth ISD",
+		High_School == "POLYTECHNIC COLLEGIATE PTECH HS" ~ "Fort Worth ISD",
+		High_School == "WORLD LANGUAGES INSTITUTE" ~ "Fort Worth ISD",
 		TRUE ~ "zUnknown ISD"
 	)
 
