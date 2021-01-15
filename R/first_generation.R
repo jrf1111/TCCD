@@ -18,7 +18,7 @@
 #' @param source Either a character of length one indicating the data source for
 #'   the entire dataset ("Discoverer" (the default) or "Orbit"), or a character
 #'   vector indicating the data source for each observation.
-#'   Note: For 2020FL and later, use data from Orbit.
+#'   __Note__: For 2020FL and later, use data from Orbit.
 #'
 #'
 #' @return if \code{parents = FALSE} (the default), a vector indicating if
@@ -32,24 +32,24 @@
 #'
 #'
 #' __Definitions__
-#' NOHS = No High School
-#' SMHS = Some High School
-#' HSGD = HS Grad or GED
-#' SMCL = Some College
-#' CLBD = Completed Bachelor's Degree
-#' CLAD = Completed Advanced Degree
-#' NRSP = No Response
-#' LESS = Less than High School
-#' GED = GED
-#' HIGH = High School
-#' VOC = Vocational/Technical
-#' SOME = Some College
-#' ASSOC = Associates Degree
-#' BACH = Bachelors Degree
-#' GRAD = Some Graduate School
-#' MAST = Masters or Professional
-#' DOC = Doctoral Degree
-#' UNKNOWN = Unknown
+#' + NOHS = No High School
+#' + SMHS = Some High School
+#' + HSGD = HS Grad or GED
+#' + SMCL = Some College
+#' + CLBD = Completed Bachelor's Degree
+#' + CLAD = Completed Advanced Degree
+#' + NRSP = No Response
+#' + LESS = Less than High School
+#' + GED = GED
+#' + HIGH = High School
+#' + VOC = Vocational/Technical
+#' + SOME = Some College
+#' + ASSOC = Associates Degree
+#' + BACH = Bachelors Degree
+#' + GRAD = Some Graduate School
+#' + MAST = Masters or Professional
+#' + DOC = Doctoral Degree
+#' + UNKNOWN = Unknown
 #'
 #' @export
 first_generation = function(Mother_Educ_Level, Father_Educ_Level,
