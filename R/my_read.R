@@ -87,7 +87,7 @@ read_folder = function(path, clean_names = T, blanks_to_na = T, ...){
 	exts = unlist(strsplit(path, ".", fixed = T))
 	exts = exts[c(FALSE, TRUE)] #every other element (just extensions)
 	if(all(exts == "csv")){
-		res = vroom::vroom(path)
+		res = vroom::vroom(path, ...)
 	} else{
 		res = rio::import_list(path, rbind = T, ...)
 	}
