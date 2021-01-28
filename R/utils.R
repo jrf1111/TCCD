@@ -78,3 +78,39 @@
 
 
 
+
+
+#' Print a list of values to console
+#'
+#' @param x The values to be turned into a list
+#' @param method Where is the list to be used? If `method = "discoverer"`
+#'   (default for now), the list elements are surrounded by single quotes and
+#'   separated by commas.  If `method = "orbit"`, the list elements are
+#'   surrounded by double quotes and separated by semicolons.
+#'
+#' @examples
+#' print_list(1:9, method = "disc") # '1', '2', '3', '4', '5', '6', '7', '8', '9'
+#'
+#' print_list(1:9, method = "o") # "1"; "2"; "3"; "4"; "5"; "6"; "7"; "8"; "9"
+#' @export
+#'
+print_list = function(x, method = c("discoverer", "orbit")){
+
+	method = match.arg(method)
+
+	if(method == "discoverer"){
+		x = unlist(x)
+		x = as.character(x)
+		x = paste(shQuote(x), collapse = ",")
+		cat(x, sep = "")
+	}
+
+	if(method == "orbit"){
+		x = unlist(x)
+		x = as.character(x)
+		x = paste(shQuote(x, type = "cmd"), collapse = ";")
+		cat(x, sep = "")
+	}
+
+
+}
