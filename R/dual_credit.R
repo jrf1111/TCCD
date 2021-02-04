@@ -80,9 +80,9 @@ res$dual_credit = dplyr::case_when(
 
 
 res = res %>%
-	group_by(Id, term_num) %>%
-	mutate(has_ECHS = any(grepl("ECHS", Program))) %>%
-	ungroup()
+	dplyr::group_by(Id, term_num) %>%
+	dplyr::mutate(has_ECHS = any(grepl("ECHS", Program))) %>%
+	dplyr::ungroup()
 
 res$dual_credit[res$has_ECHS] = FALSE
 
@@ -90,10 +90,10 @@ res$has_ECHS = NULL
 
 
 res = res %>%
-	group_by(Id, term_num) %>%
-	mutate(any_dual_credit = any(dual_credit),
+	dplyr::group_by(Id, term_num) %>%
+	dplyr::mutate(any_dual_credit = any(dual_credit),
 				 all_dual_credit = all(dual_credit)) %>%
-	ungroup()
+	dplyr::ungroup()
 
 res
 
